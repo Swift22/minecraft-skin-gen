@@ -6,6 +6,10 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./vitest.setup.ts'],
+    env: {
+      LOCAL_MODE: 'true',
+      GEMINI_API_KEY: 'test-key-vitest',
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],

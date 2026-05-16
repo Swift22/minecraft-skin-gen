@@ -6,6 +6,7 @@ import { UndoHistory } from '@/lib/skin-editor/history'
 import { floodFill } from '@/lib/skin-editor/flood-fill'
 import { downloadPng } from '@/lib/skin-editor/export-png'
 import type { SkinRegion } from '@/lib/skin-regions'
+import type { SkinIntent, SkinPixels } from '@/lib/intent/schema'
 
 export type EditorTool = 'pencil' | 'eraser' | 'eyedropper' | 'fill'
 
@@ -66,11 +67,24 @@ function pixelToHex(pixel: Pixel): string {
   return `#${pixel[0].toString(16).padStart(2, '0')}${pixel[1].toString(16).padStart(2, '0')}${pixel[2].toString(16).padStart(2, '0')}`
 }
 
-export function useEditorState(initialBuffer: PixelBuffer): {
+export function useEditorState(initialBuffer?: PixelBuffer): {
   state: EditorState
   actions: EditorActions
+  intent: SkinIntent | null
+  setIntent: (intent: SkinIntent | null) => void
+  pixels: SkinPixels | null
+  setPixels: (pixels: SkinPixels | null) => void
+  manualOverrides: Set<string>
+  loadFromGeneration: (args: {
+    intent: SkinIntent
+    pixels: SkinPixels
+    manualOverrides: string[]
+  }) => void
+  markRegionManual: (region: string) => void
+  clearManualLock: (region: string) => void
 } {
-  const [buffer, setBuffer] = useState<PixelBuffer>(() => initialBuffer)
+  const resolvedBuffer = initialBuffer ?? new PixelBuffer()
+  const [buffer, setBuffer] = useState<PixelBuffer>(() => resolvedBuffer)
   const [activeTool, setActiveTool] = useState<EditorTool>('pencil')
   const [foregroundColor, setForegroundColor] = useState<Pixel>([0, 0, 0, 255])
   const [zoomIndex, setZoomIndex] = useState(DEFAULT_ZOOM_INDEX)
@@ -83,6 +97,11 @@ export function useEditorState(initialBuffer: PixelBuffer): {
   const [recentColors, setRecentColors] = useState<string[]>(['#000000'])
   const [, forceRender] = useState(0)
 
+  // v2 fields
+  const [intent, setIntent] = useState<SkinIntent | null>(null)
+  const [pixels, setPixels] = useState<SkinPixels | null>(null)
+  const [manualOverrides, setManualOverrides] = useState<Set<string>>(new Set())
+
   const historyRef = useRef<UndoHistory>(new UndoHistory())
   const isStrokingRef = useRef(false)
   const lastPixelRef = useRef<{ x: number; y: number } | null>(null)
@@ -90,7 +109,7 @@ export function useEditorState(initialBuffer: PixelBuffer): {
   // Initialize history with the first state
   const initializedRef = useRef(false)
   if (!initializedRef.current) {
-    historyRef.current.push(initialBuffer)
+    historyRef.current.push(resolvedBuffer)
     initializedRef.current = true
   }
 
@@ -245,6 +264,28 @@ export function useEditorState(initialBuffer: PixelBuffer): {
     return buffer.toDataUrl()
   }, [buffer])
 
+  // v2 methods
+  const loadFromGeneration = useCallback(
+    (args: { intent: SkinIntent; pixels: SkinPixels; manualOverrides: string[] }) => {
+      setIntent(args.intent)
+      setPixels(args.pixels)
+      setManualOverrides(new Set(args.manualOverrides))
+    },
+    []
+  )
+
+  const markRegionManual = useCallback((region: string) => {
+    setManualOverrides((prev) => new Set([...prev, region]))
+  }, [])
+
+  const clearManualLock = useCallback((region: string) => {
+    setManualOverrides((prev) => {
+      const next = new Set(prev)
+      next.delete(region)
+      return next
+    })
+  }, [])
+
   return {
     state: {
       buffer,
@@ -278,5 +319,13 @@ export function useEditorState(initialBuffer: PixelBuffer): {
       download,
       getDataUrl,
     },
+    intent,
+    setIntent,
+    pixels,
+    setPixels,
+    manualOverrides,
+    loadFromGeneration,
+    markRegionManual,
+    clearManualLock,
   }
 }

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { toast } from 'sonner'
-import { Upload, Download, Grid3X3, Eye, EyeOff } from 'lucide-react'
+import { Upload, Download, Grid3X3, Eye, EyeOff, Save } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
@@ -395,6 +395,26 @@ function Editor({ initialBuffer, generationId, onSkinUrlChange }: EditorProps) {
     if (j.skinUrl) onSkinUrlChange(j.skinUrl)
   }
 
+  async function handleSave() {
+    if (!generationId || !editor.intent || !editor.pixels) return
+    const res = await fetch(`/api/generate/${generationId}/save`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        intent: editor.intent,
+        pixels: editor.pixels,
+        manual_overrides: [...editor.manualOverrides],
+      }),
+    })
+    if (!res.ok) {
+      toast.error('Save failed')
+      return
+    }
+    const j = await res.json() as { skinUrl?: string }
+    if (j.skinUrl) onSkinUrlChange(j.skinUrl)
+    toast.success('Saved')
+  }
+
   return (
     <div className="animate-fade-in">
       <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
@@ -455,7 +475,13 @@ function Editor({ initialBuffer, generationId, onSkinUrlChange }: EditorProps) {
             onZoomOut={actions.zoomOut}
           />
 
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-2">
+            {generationId && (
+              <Button variant="outline" onClick={handleSave}>
+                <Save className="h-4 w-4 mr-2" />
+                Save
+              </Button>
+            )}
             <Button onClick={actions.download}>
               <Download className="h-4 w-4 mr-2" />
               Download PNG

@@ -5,8 +5,9 @@ import { skinGenerations } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
 import { IS_LOCAL_MODE } from '@/lib/local-mode'
 
-export async function GET(_request: NextRequest, ctx: { params: { id: string } }) {
-  const rows = await db.select().from(skinGenerations).where(eq(skinGenerations.id, ctx.params.id))
+export async function GET(_request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
+  const { id } = await ctx.params
+  const rows = await db.select().from(skinGenerations).where(eq(skinGenerations.id, id))
   const gen = rows[0]
   if (!gen) return NextResponse.json({ error: 'not_found' }, { status: 404 })
 
@@ -24,7 +25,7 @@ export async function GET(_request: NextRequest, ctx: { params: { id: string } }
     const { data } = await supabase.storage.from('skins').createSignedUrl(gen.resultPath, 3600)
     skinUrl = data?.signedUrl
   } else if (gen.resultPath && IS_LOCAL_MODE) {
-    skinUrl = `/local-skins/${ctx.params.id}.png`
+    skinUrl = `/local-skins/${id}.png`
   }
 
   return NextResponse.json({

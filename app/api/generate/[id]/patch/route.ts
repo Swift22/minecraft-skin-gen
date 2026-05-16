@@ -12,8 +12,8 @@ import { IS_LOCAL_MODE } from '@/lib/local-mode'
 
 const bodySchema = z.object({ instruction: z.string().min(1).max(500) })
 
-export async function POST(request: NextRequest, ctx: { params: { id: string } }) {
-  const generationId = ctx.params.id
+export async function POST(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
+  const { id: generationId } = await ctx.params
   const body = bodySchema.safeParse(await request.json().catch(() => ({})))
   if (!body.success) return NextResponse.json({ error: 'invalid_body' }, { status: 400 })
 

@@ -63,7 +63,7 @@ describe('POST /api/generate/:id/variations', () => {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ count: 3 }),
     })
-    const res = await POST(req as unknown as import('next/server').NextRequest, { params: { id: 'abc' } } as { params: { id: string } })
+    const res = await POST(req as unknown as import('next/server').NextRequest, { params: Promise.resolve({ id: 'abc' }) } as { params: Promise<{ id: string }> })
     const json = await res.json()
     expect(res.status).toBe(200)
     expect(json.variations.length).toBe(3)
@@ -78,7 +78,7 @@ describe('POST /api/generate/:id/variations', () => {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ count: 10 }),
     })
-    const res = await POST(req as unknown as import('next/server').NextRequest, { params: { id: 'abc' } } as { params: { id: string } })
+    const res = await POST(req as unknown as import('next/server').NextRequest, { params: Promise.resolve({ id: 'abc' }) } as { params: Promise<{ id: string }> })
     expect(res.status).toBe(400)
   })
 })

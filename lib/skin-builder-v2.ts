@@ -30,16 +30,16 @@ export interface SkinIntent {
     eye_white: string
     brows: BrowShape
     mouth: MouthShape
-    mouth_color: string
+    mouth_color?: string
     nose: NoseShape
-    nose_shadow: string
+    nose_shadow?: string
     hair_style: HairStyle
     hair_length: HairLength
     hair_color: string
-    hair_accent_color: string
+    hair_accent_color?: string
     ear_template: EarTemplate
-    ear_color: string
-    inner_ear_color: string
+    ear_color?: string
+    inner_ear_color?: string
   }
   outfit: { torso: string; arms: string; legs: string; jacket?: string; sleeves?: string; pants_outer?: string; accessories?: string }
   refinement_history: unknown[]
@@ -152,6 +152,18 @@ export async function buildSkinPngV2(intent: SkinIntent, pixels: SkinPixels): Pr
   const palette = precomputePalette(paletteRgb)
   const threshold = intent.palette_mode === 'hard' ? 0 : DEFAULT_SNAP_THRESHOLD
 
+  // Defaults for character colors the Director may omit:
+  // - hair_accent_color: same as hair_color (no streak/tip variation)
+  // - ear_color: same as hair_color (ears match hair)
+  // - inner_ear_color: static pink accent
+  // - mouth_color: dark brown (works against most skin tones)
+  // - nose_shadow: medium brown (one notch darker than typical skin)
+  const hair_accent_color = intent.character.hair_accent_color ?? intent.character.hair_color
+  const ear_color = intent.character.ear_color ?? intent.character.hair_color
+  const inner_ear_color = intent.character.inner_ear_color ?? '#FFB8CC'
+  const mouth_color = intent.character.mouth_color ?? '#5C3A2E'
+  const nose_shadow = intent.character.nose_shadow ?? '#A07050'
+
   // 1. Parametric face → head_front
   const face = composeFace({
     skin_tone: intent.character.skin_tone,
@@ -160,11 +172,11 @@ export async function buildSkinPngV2(intent: SkinIntent, pixels: SkinPixels): Pr
     eye_white: intent.character.eye_white,
     brows: intent.character.brows,
     mouth: intent.character.mouth,
-    mouth_color: intent.character.mouth_color,
+    mouth_color,
     nose: intent.character.nose,
-    nose_shadow: intent.character.nose_shadow,
+    nose_shadow,
     hair_color: intent.character.hair_color,
-    hair_accent_color: intent.character.hair_accent_color,
+    hair_accent_color,
     hair_style: intent.character.hair_style,
   })
   blitRegion(buf, R.head_front!, face)
@@ -174,7 +186,7 @@ export async function buildSkinPngV2(intent: SkinIntent, pixels: SkinPixels): Pr
     hair_style: intent.character.hair_style,
     hair_length: intent.character.hair_length,
     hair_color: intent.character.hair_color,
-    hair_accent_color: intent.character.hair_accent_color,
+    hair_accent_color,
     skin_tone: intent.character.skin_tone,
   })
   blitRegion(buf, R.head_top!, hair.head_top)
@@ -191,8 +203,8 @@ export async function buildSkinPngV2(intent: SkinIntent, pixels: SkinPixels): Pr
   // 3. Ears overlay
   const earOut = composeEars({
     ear_template: intent.character.ear_template,
-    ear_color: intent.character.ear_color,
-    inner_ear_color: intent.character.inner_ear_color,
+    ear_color,
+    inner_ear_color,
     skin_tone: intent.character.skin_tone,
   })
   blitRegion(buf, R.hat_top!, earOut.hat_top)

@@ -43,7 +43,7 @@ vi.mock('@/lib/db', () => ({
 
 describe('GET /api/generate/:id', () => {
   it('returns intent, pixels, manual_overrides, skinUrl', async () => {
-    const res = await GET({} as unknown as import('next/server').NextRequest, { params: { id: 'abc' } } as { params: { id: string } })
+    const res = await GET({} as unknown as import('next/server').NextRequest, { params: Promise.resolve({ id: 'abc' }) } as { params: Promise<{ id: string }> })
     const json = await res.json()
     expect(res.status).toBe(200)
     expect(json.intent.version).toBe(1)
@@ -53,7 +53,7 @@ describe('GET /api/generate/:id', () => {
 
   it('returns 404 when generation is not found', async () => {
     mockWhere.mockResolvedValueOnce([])
-    const res = await GET({} as unknown as import('next/server').NextRequest, { params: { id: 'missing' } } as { params: { id: string } })
+    const res = await GET({} as unknown as import('next/server').NextRequest, { params: Promise.resolve({ id: 'missing' }) } as { params: Promise<{ id: string }> })
     expect(res.status).toBe(404)
   })
 })

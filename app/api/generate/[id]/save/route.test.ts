@@ -56,7 +56,7 @@ describe('POST /api/generate/:id/save', () => {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(VALID),
     })
-    const res = await POST(req as unknown as import('next/server').NextRequest, { params: { id: 'abc' } } as { params: { id: string } })
+    const res = await POST(req as unknown as import('next/server').NextRequest, { params: Promise.resolve({ id: 'abc' }) } as { params: Promise<{ id: string }> })
     expect(res.status).toBe(200)
     const json = await res.json()
     expect(json.ok).toBe(true)
@@ -68,7 +68,7 @@ describe('POST /api/generate/:id/save', () => {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ ...VALID, intent: { bad: true } }),
     })
-    const res = await POST(req as unknown as import('next/server').NextRequest, { params: { id: 'abc' } } as { params: { id: string } })
+    const res = await POST(req as unknown as import('next/server').NextRequest, { params: Promise.resolve({ id: 'abc' }) } as { params: Promise<{ id: string }> })
     expect(res.status).toBe(400)
   })
 
@@ -79,7 +79,7 @@ describe('POST /api/generate/:id/save', () => {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify(VALID),
     })
-    const res = await POST(req as unknown as import('next/server').NextRequest, { params: { id: 'missing' } } as { params: { id: string } })
+    const res = await POST(req as unknown as import('next/server').NextRequest, { params: Promise.resolve({ id: 'missing' }) } as { params: Promise<{ id: string }> })
     expect(res.status).toBe(404)
   })
 })

@@ -78,7 +78,7 @@ describe('POST /api/generate/:id/patch', () => {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ instruction: 'make the shirt redder' }),
     })
-    const res = await POST(req as unknown as import('next/server').NextRequest, { params: { id: 'abc' } } as { params: { id: string } })
+    const res = await POST(req as unknown as import('next/server').NextRequest, { params: Promise.resolve({ id: 'abc' }) } as { params: Promise<{ id: string }> })
     const json = await res.json()
     expect(res.status).toBe(200)
     expect(json.intent.palette[0]).toBe('#E63946')
@@ -96,7 +96,7 @@ describe('POST /api/generate/:id/patch', () => {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ instruction: 'do something cool' }),
     })
-    const res = await POST(req as unknown as import('next/server').NextRequest, { params: { id: 'abc' } } as { params: { id: string } })
+    const res = await POST(req as unknown as import('next/server').NextRequest, { params: Promise.resolve({ id: 'abc' }) } as { params: Promise<{ id: string }> })
     expect(res.status).toBe(422)
     const json = await res.json()
     expect(json.message).toMatch(/not sure what to change/i)

@@ -14,8 +14,8 @@ const bodySchema = z.object({
   manual_overrides: z.array(z.string()),
 })
 
-export async function POST(request: NextRequest, ctx: { params: { id: string } }) {
-  const generationId = ctx.params.id
+export async function POST(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
+  const { id: generationId } = await ctx.params
   const body = bodySchema.safeParse(await request.json().catch(() => ({})))
   if (!body.success) return NextResponse.json({ error: 'invalid_body', details: body.error.format() }, { status: 400 })
 

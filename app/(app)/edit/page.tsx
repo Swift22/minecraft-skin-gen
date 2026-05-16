@@ -19,7 +19,7 @@ export default async function EditPage({ searchParams }: EditPageProps) {
 
   // Local mode: serve from local path
   if (IS_LOCAL_MODE) {
-    return <EditPageClient skinUrl={`/local-skins/${id}.png`} />
+    return <EditPageClient skinUrl={`/local-skins/${id}.png`} generationId={id} />
   }
 
   // Auth check + fetch generation
@@ -57,5 +57,5 @@ export default async function EditPage({ searchParams }: EditPageProps) {
     redirect('/gallery')
   }
 
-  return <EditPageClient skinUrl={signedData.signedUrl} />
+  return <EditPageClient skinUrl={signedData.signedUrl} generationId={id} />
 }

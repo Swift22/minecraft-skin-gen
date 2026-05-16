@@ -14,10 +14,16 @@ import { ColorPalette } from '@/components/skin-editor/ColorPalette'
 import { EditorPreview } from '@/components/skin-editor/EditorPreview'
 import { HistoryControls } from '@/components/skin-editor/HistoryControls'
 import { ZoomControls } from '@/components/skin-editor/ZoomControls'
+import { PaletteSwatches } from '@/components/skin-editor/PaletteSwatches'
+import { CharacterParameters } from '@/components/skin-editor/CharacterParameters'
+import { CharacterColors } from '@/components/skin-editor/CharacterColors'
+import { RefinementChat } from '@/components/skin-editor/RefinementChat'
 import { getRegionAt } from '@/lib/skin-editor/region-lookup'
+import type { SkinIntent, SkinPixels } from '@/lib/intent/schema'
 
 interface EditPageClientProps {
   skinUrl?: string | null
+  generationId?: string
 }
 
 function loadImageToBuffer(src: string): Promise<PixelBuffer> {
@@ -42,9 +48,10 @@ function loadImageToBuffer(src: string): Promise<PixelBuffer> {
   })
 }
 
-export function EditPageClient({ skinUrl }: EditPageClientProps) {
+export function EditPageClient({ skinUrl: initialSkinUrl, generationId }: EditPageClientProps) {
   const [buffer, setBuffer] = useState<PixelBuffer | null>(null)
-  const [loading, setLoading] = useState(!!skinUrl)
+  const [skinUrl, setSkinUrl] = useState<string | null | undefined>(initialSkinUrl)
+  const [loading, setLoading] = useState(!!initialSkinUrl)
   const [error, setError] = useState<string | null>(null)
 
   // Load skin from URL
@@ -138,7 +145,13 @@ export function EditPageClient({ skinUrl }: EditPageClientProps) {
     )
   }
 
-  return <Editor initialBuffer={buffer} />
+  return (
+    <Editor
+      initialBuffer={buffer}
+      generationId={generationId}
+      onSkinUrlChange={setSkinUrl}
+    />
+  )
 }
 
 function UploadDropzone({
@@ -179,10 +192,43 @@ function UploadDropzone({
   )
 }
 
-function Editor({ initialBuffer }: { initialBuffer: PixelBuffer }) {
-  const { state, actions } = useEditorState(initialBuffer)
+interface EditorProps {
+  initialBuffer: PixelBuffer
+  generationId?: string
+  onSkinUrlChange: (url: string) => void
+}
+
+function Editor({ initialBuffer, generationId, onSkinUrlChange }: EditorProps) {
+  const editor = useEditorState(initialBuffer)
+  const { state, actions } = editor
   const [previewDataUrl, setPreviewDataUrl] = useState('')
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // v2 UI state
+  const [rerollingRegion, setRerollingRegion] = useState<string | null>(null)
+  const [chatLoading, setChatLoading] = useState(false)
+  const [chatError, setChatError] = useState<string | undefined>(undefined)
+
+  // Fetch generation data on mount if generationId present
+  useEffect(() => {
+    if (!generationId) return
+    fetch(`/api/generate/${generationId}`)
+      .then((r) => r.json())
+      .then((json: { intent?: SkinIntent; pixels?: SkinPixels; manual_overrides?: string[]; skinUrl?: string }) => {
+        if (json.intent && json.pixels) {
+          editor.loadFromGeneration({
+            intent: json.intent,
+            pixels: json.pixels,
+            manualOverrides: json.manual_overrides ?? [],
+          })
+        }
+        if (json.skinUrl) {
+          onSkinUrlChange(json.skinUrl)
+        }
+      })
+      .catch(() => toast.error('Failed to load generation data'))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [generationId])
 
   // Debounced 3D preview update
   useEffect(() => {
@@ -273,6 +319,82 @@ function Editor({ initialBuffer }: { initialBuffer: PixelBuffer }) {
     [actions]
   )
 
+  // v2 handlers
+
+  async function rebuildAndSave(intent: SkinIntent, pixels: SkinPixels) {
+    if (!generationId) return
+    const res = await fetch(`/api/generate/${generationId}/save`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ intent, pixels, manual_overrides: [...editor.manualOverrides] }),
+    })
+    const json = await res.json() as { skinUrl?: string }
+    if (json.skinUrl) onSkinUrlChange(json.skinUrl)
+  }
+
+  async function handlePaletteChange(index: number, hex: string) {
+    if (!editor.intent || !editor.pixels) return
+    const nextIntent: SkinIntent = {
+      ...editor.intent,
+      palette: editor.intent.palette.map((c, i) => (i === index ? hex : c)),
+    }
+    editor.setIntent(nextIntent)
+    await rebuildAndSave(nextIntent, editor.pixels)
+  }
+
+  async function handleCharacterChange(field: keyof SkinIntent['character'], value: string) {
+    if (!editor.intent || !editor.pixels) return
+    const nextIntent: SkinIntent = {
+      ...editor.intent,
+      character: { ...editor.intent.character, [field]: value },
+    }
+    editor.setIntent(nextIntent)
+    await rebuildAndSave(nextIntent, editor.pixels)
+  }
+
+  async function handleReroll(region: string) {
+    if (!generationId) return
+    setRerollingRegion(region)
+    const res = await fetch(`/api/generate/${generationId}/reroll`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ regions: [region] }),
+    })
+    setRerollingRegion(null)
+    if (!res.ok) {
+      toast.error('Re-roll failed')
+      return
+    }
+    const json = await res.json() as { pixels?: SkinPixels; skinUrl?: string }
+    if (json.pixels) editor.setPixels(json.pixels)
+    if (json.skinUrl) onSkinUrlChange(json.skinUrl)
+  }
+
+  async function handlePatch(instruction: string) {
+    if (!generationId) return
+    setChatLoading(true)
+    setChatError(undefined)
+    const res = await fetch(`/api/generate/${generationId}/patch`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ instruction }),
+    })
+    setChatLoading(false)
+    if (res.status === 422) {
+      const j = await res.json() as { message?: string }
+      setChatError(j.message ?? 'Unactionable instruction')
+      return
+    }
+    if (!res.ok) {
+      setChatError('Patch failed')
+      return
+    }
+    const j = await res.json() as { intent?: SkinIntent; pixels?: SkinPixels; skinUrl?: string }
+    if (j.intent) editor.setIntent(j.intent)
+    if (j.pixels) editor.setPixels(j.pixels)
+    if (j.skinUrl) onSkinUrlChange(j.skinUrl)
+  }
+
   return (
     <div className="animate-fade-in">
       <div className="max-w-6xl mx-auto px-4 py-6 space-y-4">
@@ -345,8 +467,8 @@ function Editor({ initialBuffer }: { initialBuffer: PixelBuffer }) {
 
         {/* Main layout */}
         <div className="grid grid-cols-1 lg:grid-cols-[200px_1fr_300px] gap-6">
-          {/* Left: Color palette */}
-          <div className="lg:order-1 order-2">
+          {/* Left: Color palette + v2 sidebar */}
+          <div className="lg:order-1 order-2 flex flex-col gap-4">
             <ColorPalette
               foregroundColor={state.foregroundColor}
               recentColors={state.recentColors}
@@ -354,7 +476,7 @@ function Editor({ initialBuffer }: { initialBuffer: PixelBuffer }) {
             />
 
             {state.hoveredRegion && (
-              <div className="mt-4 p-2 rounded border border-border bg-card">
+              <div className="p-2 rounded border border-border bg-card">
                 <p className="text-xs text-muted-foreground">Region</p>
                 <p className="text-sm font-medium">
                   {state.hoveredRegion.name.replace(/_/g, ' ')}
@@ -364,24 +486,58 @@ function Editor({ initialBuffer }: { initialBuffer: PixelBuffer }) {
                 </Badge>
               </div>
             )}
+
+            {editor.intent && (
+              <>
+                <PaletteSwatches
+                  palette={editor.intent.palette}
+                  onChange={handlePaletteChange}
+                />
+                <CharacterParameters
+                  character={editor.intent.character}
+                  onChange={handleCharacterChange}
+                />
+                <CharacterColors
+                  character={editor.intent.character}
+                  onChange={handleCharacterChange}
+                />
+              </>
+            )}
           </div>
 
           {/* Center: Canvas */}
-          <div className="lg:order-2 order-1 flex justify-center overflow-auto">
-            <SkinCanvas
-              buffer={state.buffer}
-              zoomLevel={state.zoomLevel}
-              showGrid={state.showGrid}
-              showRegions={state.showRegions}
-              activeTool={state.activeTool}
-              onBeginStroke={actions.beginStroke}
-              onDrawPixel={actions.drawPixel}
-              onEndStroke={actions.endStroke}
-              onPickColor={actions.pickColor}
-              onFillAt={actions.fillAt}
-              onHover={handleHover}
-              onHoverLeave={() => actions.setHoveredRegion(null)}
-            />
+          <div className="lg:order-2 order-1 flex flex-col gap-2">
+            <div className="flex justify-center overflow-auto">
+              <SkinCanvas
+                buffer={state.buffer}
+                zoomLevel={state.zoomLevel}
+                showGrid={state.showGrid}
+                showRegions={state.showRegions}
+                activeTool={state.activeTool}
+                onBeginStroke={actions.beginStroke}
+                onDrawPixel={actions.drawPixel}
+                onEndStroke={actions.endStroke}
+                onPickColor={actions.pickColor}
+                onFillAt={actions.fillAt}
+                onHover={handleHover}
+                onHoverLeave={() => actions.setHoveredRegion(null)}
+                onReroll={generationId ? handleReroll : undefined}
+                lockedRegions={editor.manualOverrides}
+                onPaintInRegion={editor.markRegionManual}
+              />
+            </div>
+            {rerollingRegion && (
+              <p className="text-xs text-muted-foreground text-center animate-pulse">
+                Re-rolling {rerollingRegion.replace(/_/g, ' ')}…
+              </p>
+            )}
+            {generationId && (
+              <RefinementChat
+                onSubmit={handlePatch}
+                loading={chatLoading}
+                error={chatError}
+              />
+            )}
           </div>
 
           {/* Right: 3D Preview */}

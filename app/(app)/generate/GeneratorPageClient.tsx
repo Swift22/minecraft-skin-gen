@@ -8,6 +8,7 @@ import { SkinPreview } from '@/components/skin-generator/SkinPreview'
 import { UpgradePrompt } from '@/components/skin-generator/UpgradePrompt'
 import { Separator } from '@/components/ui/separator'
 import { AdUnit } from '@/components/ads/AdUnit'
+import type { SkinIntent } from '@/lib/intent/schema'
 
 const AD_BANNER_SLOT = '1234567890'
 
@@ -24,6 +25,7 @@ interface GenerationResult {
   generationId: string
   status: 'completed' | 'failed'
   skinUrl?: string
+  intent?: SkinIntent
   creditsRemaining: number
 }
 
@@ -35,6 +37,7 @@ export function GeneratorPageClient({ initialUser }: GeneratorPageClientProps) {
   const [user, setUser] = useState(initialUser)
   const [skinUrl, setSkinUrl] = useState<string | null>(null)
   const [generationId, setGenerationId] = useState<string | null>(null)
+  const [intent, setIntent] = useState<SkinIntent | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [regenerateTrigger, setRegenerateTrigger] = useState(0)
 
@@ -42,6 +45,7 @@ export function GeneratorPageClient({ initialUser }: GeneratorPageClientProps) {
     if (result.status === 'completed' && result.skinUrl) {
       setSkinUrl(result.skinUrl)
       setGenerationId(result.generationId)
+      setIntent(result.intent ?? null)
       toast.success('Skin generated!')
     } else {
       toast.error('Generation failed. Please try again.')
@@ -56,6 +60,7 @@ export function GeneratorPageClient({ initialUser }: GeneratorPageClientProps) {
   function handleRegenerate() {
     setSkinUrl(null)
     setGenerationId(null)
+    setIntent(null)
     setRegenerateTrigger((n) => n + 1)
   }
 
@@ -81,6 +86,7 @@ export function GeneratorPageClient({ initialUser }: GeneratorPageClientProps) {
               generationId={generationId}
               onRegenerate={handleRegenerate}
               isGenerating={isGenerating}
+              intent={intent}
             />
           </div>
 

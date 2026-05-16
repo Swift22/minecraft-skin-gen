@@ -4,12 +4,15 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
+import type { SkinIntent } from '@/lib/intent/schema'
 
 interface SkinPreviewProps {
   skinUrl: string | null
   generationId: string | null
   onRegenerate: () => void
   isGenerating?: boolean
+  /** TODO(Plan C): forwarded to editor page via state/context once editor is implemented */
+  intent?: SkinIntent | null
 }
 
 // 4×4 pixel-art face: 'g' = green (bg-primary), 'e' = eye/mouth (bg-background)
@@ -20,7 +23,8 @@ const FACE_PIXELS = [
   ['g', 'e', 'e', 'g'],
 ] as const
 
-export function SkinPreview({ skinUrl, generationId, onRegenerate, isGenerating = false }: SkinPreviewProps) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function SkinPreview({ skinUrl, generationId, onRegenerate, isGenerating = false, intent: _intent }: SkinPreviewProps) {
   const [isDownloading, setIsDownloading] = useState(false)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 

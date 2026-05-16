@@ -39,8 +39,9 @@ export function deltaE76(a: Lab, b: Lab): number {
 }
 
 export function nearestPaletteColor(rgb: RGB, palette: RGB[]): [RGB, number] {
+  if (palette.length === 0) throw new Error('nearestPaletteColor: palette must be non-empty')
   const labIn = rgbToLab(rgb)
-  let best: RGB = palette[0]
+  let best: RGB = palette[0] as RGB
   let bestDist = Infinity
   for (const p of palette) {
     const dist = deltaE76(labIn, rgbToLab(p))
@@ -54,6 +55,35 @@ export function nearestPaletteColor(rgb: RGB, palette: RGB[]): [RGB, number] {
 
 export function softSnap(rgb: RGB, palette: RGB[], threshold: number): RGB {
   const [nearest, dist] = nearestPaletteColor(rgb, palette)
+  return dist < threshold ? rgb : nearest
+}
+
+export interface PaletteEntry {
+  rgb: RGB
+  lab: Lab
+}
+
+export function precomputePalette(palette: RGB[]): PaletteEntry[] {
+  return palette.map((rgb) => ({ rgb, lab: rgbToLab(rgb) }))
+}
+
+export function nearestPaletteColorPrecomputed(rgb: RGB, palette: PaletteEntry[]): [RGB, number] {
+  if (palette.length === 0) throw new Error('nearestPaletteColorPrecomputed: palette must be non-empty')
+  const labIn = rgbToLab(rgb)
+  let best: RGB = (palette[0] as PaletteEntry).rgb
+  let bestDist = Infinity
+  for (const p of palette) {
+    const dist = deltaE76(labIn, p.lab)
+    if (dist < bestDist) {
+      best = p.rgb
+      bestDist = dist
+    }
+  }
+  return [best, bestDist]
+}
+
+export function softSnapPrecomputed(rgb: RGB, palette: PaletteEntry[], threshold: number): RGB {
+  const [nearest, dist] = nearestPaletteColorPrecomputed(rgb, palette)
   return dist < threshold ? rgb : nearest
 }
 

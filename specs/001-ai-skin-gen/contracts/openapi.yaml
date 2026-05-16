@@ -1,0 +1,336 @@
+openapi: "3.1.0"
+info:
+  title: Minecraft Skin Generator API
+  version: "1.0.0"
+  description: >
+    Internal API for the AI Minecraft skin generator webapp.
+    All endpoints except /api/webhooks/stripe require a valid Supabase
+    session cookie (set by Supabase Auth). All endpoints are Next.js
+    Route Handlers under app/api/.
+
+servers:
+  - url: /api
+    description: Next.js App Router API routes
+
+components:
+  securitySchemes:
+    supabaseSession:
+      type: apiKey
+      in: cookie
+      name: sb-access-token
+      description: Supabase session cookie set by @supabase/ssr
+
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+          description: Machine-readable error code
+          example: generation_limit_reached
+        message:
+          type: string
+          description: Human-readable error description
+          example: You have used all your generations for today.
+        resetAt:
+          type: string
+          format: date-time
+          description: When the credit counter resets (included when error=generation_limit_reached)
+
+    User:
+      type: object
+      required: [id, email, creditsRemaining, dailyLimit, isSubscriber]
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        creditsRemaining:
+          type: integer
+          minimum: 0
+          description: Number of skin generations remaining today
+        dailyLimit:
+          type: integer
+          description: Total daily generation allowance for this tier (3 free, 50 subscribed)
+        isSubscriber:
+          type: boolean
+          description: Whether the user has an active paid subscription
+        subscriptionEndsAt:
+          type: string
+          format: date-time
+          nullable: true
+          description: When the current subscription period ends (null if free user)
+
+    GenerationResult:
+      type: object
+      required: [generationId, status]
+      properties:
+        generationId:
+          type: string
+          format: uuid
+          description: ID of the skin_generations record
+        status:
+          type: string
+          enum: [completed, failed]
+        skinUrl:
+          type: string
+          format: uri
+          description: >
+            Signed URL to download the generated 64x64 PNG skin file.
+            Valid for 1 hour. Present only when status=completed.
+        creditsRemaining:
+          type: integer
+          description: Credits remaining after this generation
+
+    CheckoutSession:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+          format: uri
+          description: Stripe Checkout URL to redirect the user to
+
+    PortalSession:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+          format: uri
+          description: Stripe Customer Portal URL to redirect the user to
+
+security:
+  - supabaseSession: []
+
+paths:
+  /user/me:
+    get:
+      operationId: getCurrentUser
+      summary: Get current user info
+      description: >
+        Returns the authenticated user's profile including credit balance,
+        subscription status, and daily limit. Used by the generator page
+        to show the credit counter (FR-016).
+      responses:
+        "200":
+          description: Current user profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /generate:
+    post:
+      operationId: generateSkin
+      summary: Generate a Minecraft skin
+      description: >
+        Accepts a text prompt and/or an uploaded reference image.
+        Checks and atomically deducts a generation credit before calling
+        the AI. Returns a signed download URL for the 64x64 PNG on success.
+        Credits are refunded automatically if the AI call fails (FR-020).
+        At least one of `prompt` or `referenceImage` must be provided.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                  description: Text description of the desired skin appearance
+                  maxLength: 1000
+                  example: "A ninja in a black outfit with a red headband and glowing red eyes"
+                referenceImage:
+                  type: string
+                  format: binary
+                  description: >
+                    Optional reference image (JPEG or PNG, max 10 MB).
+                    Used by the AI as visual context for the skin design.
+      responses:
+        "200":
+          description: Skin generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GenerationResult"
+        "400":
+          description: >
+            Invalid request — no prompt or image provided, or uploaded file
+            fails format/size validation. No credit is consumed.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                noInput:
+                  value:
+                    error: no_input
+                    message: Please provide a description or upload a reference image.
+                invalidFile:
+                  value:
+                    error: invalid_file
+                    message: Reference image must be a JPEG or PNG under 10 MB.
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "402":
+          description: Generation limit reached — no credits remaining
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: generation_limit_reached
+                message: You have used all 3 of your daily generations. Upgrade for more.
+                resetAt: "2026-02-22T00:00:00Z"
+        "500":
+          description: AI generation failed — credit has been refunded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                error: generation_failed
+                message: Skin generation failed. Your credit has been refunded. Please try again.
+
+  /generate/{generationId}/download:
+    get:
+      operationId: downloadSkin
+      summary: Get a fresh signed download URL for a generated skin
+      description: >
+        Returns a short-lived signed URL for downloading the skin PNG.
+        The caller must be the owner of the generation record.
+      parameters:
+        - in: path
+          name: generationId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Signed download URL
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [url]
+                properties:
+                  url:
+                    type: string
+                    format: uri
+                    description: Signed URL valid for 1 hour
+        "403":
+          description: Generation does not belong to the authenticated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Generation not found or not yet completed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /subscription/checkout:
+    post:
+      operationId: createCheckoutSession
+      summary: Create a Stripe Checkout session for the Pro subscription
+      description: >
+        Creates a Stripe Checkout session for the Pro subscription tier.
+        Returns a URL to redirect the user to. Creates or reuses the
+        user's Stripe customer record. The price is resolved server-side
+        from STRIPE_PRO_PRICE_ID — never from client input.
+      responses:
+        "200":
+          description: Checkout session created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CheckoutSession"
+        "400":
+          description: User already has an active subscription
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /subscription/portal:
+    post:
+      operationId: createPortalSession
+      summary: Create a Stripe Customer Portal session
+      description: >
+        Creates a Stripe Billing Portal session so the user can manage
+        their subscription (cancel, update payment method, view invoices).
+      responses:
+        "200":
+          description: Portal session created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortalSession"
+        "400":
+          description: User has no Stripe customer record
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /webhooks/stripe:
+    post:
+      operationId: stripeWebhook
+      summary: Stripe webhook receiver
+      description: >
+        Receives and processes Stripe webhook events. Signature is verified
+        using the raw request body (not parsed JSON) and STRIPE_WEBHOOK_SECRET.
+        Idempotency is enforced via the webhook_events table keyed on event.id.
+        Always returns 200 — including for duplicates and unknown event types —
+        to prevent Stripe from retrying indefinitely.
+        Handles: customer.subscription.created, customer.subscription.updated,
+        customer.subscription.deleted, invoice.payment_failed.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Raw Stripe event payload (verified by signature)
+      parameters:
+        - in: header
+          name: stripe-signature
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Event received (processed, skipped as duplicate, or unknown type)
+        "400":
+          description: Invalid Stripe signature — request rejected

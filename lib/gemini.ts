@@ -1,5 +1,5 @@
 import { GoogleGenAI, type Part } from '@google/genai'
-import { regionColorMapSchema, type RegionColorMap } from './region-color-map'
+import { regionColorMapSchema, type RegionColorMap } from './legacy/region-color-map'
 import { env } from './env'
 import { SYSTEM_INSTRUCTION } from './gemini-system-prompt'
 

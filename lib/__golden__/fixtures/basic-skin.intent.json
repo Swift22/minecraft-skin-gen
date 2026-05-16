@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "seed": 42,
+  "style": "retro",
+  "palette": ["#1C3D73", "#2A5099", "#6B4A20", "#D4AA55", "#1A1428"],
+  "palette_mode": "soft",
+  "character": {
+    "skin_tone": "#C4956A",
+    "eye_shape": "round",
+    "eye_color": "#1E3A7A",
+    "eye_white": "#F0EFEB",
+    "brows": "flat",
+    "mouth": "smile",
+    "mouth_color": "#8B5040",
+    "nose": "dot",
+    "nose_shadow": "#A07050",
+    "hair_style": "classic",
+    "hair_length": "medium",
+    "hair_color": "#3B2507",
+    "hair_accent_color": "#5A3D14",
+    "ear_template": "none",
+    "ear_color": "#3B2507",
+    "inner_ear_color": "#FFB8CC"
+  },
+  "outfit": { "torso": "blue tunic", "arms": "blue sleeves", "legs": "dark trousers" },
+  "refinement_history": []
+}

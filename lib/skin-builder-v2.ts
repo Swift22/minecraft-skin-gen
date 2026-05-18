@@ -222,14 +222,18 @@ export async function buildSkinPngV2(intent: SkinIntent, pixels: SkinPixels): Pr
   paintHexGrid(buf, R.right_arm_front!, pixels.arm_front, palette, threshold)
   paintHexGrid(buf, R.left_arm_front!, mirrorHorizontal(pixels.arm_front), palette, threshold)
   paintHexGrid(buf, R.right_arm_right!, pixels.arm_side, palette, threshold)
+  paintHexGrid(buf, R.right_arm_left!, mirrorHorizontal(pixels.arm_side), palette, threshold)  // inner face of right arm
   paintHexGrid(buf, R.left_arm_left!, mirrorHorizontal(pixels.arm_side), palette, threshold)
+  paintHexGrid(buf, R.left_arm_right!, pixels.arm_side, palette, threshold)                    // inner face of left arm
   paintHexGrid(buf, R.right_arm_back!, pixels.arm_back, palette, threshold)
   paintHexGrid(buf, R.left_arm_back!, mirrorHorizontal(pixels.arm_back), palette, threshold)
 
   paintHexGrid(buf, R.right_leg_front!, pixels.leg_front, palette, threshold)
   paintHexGrid(buf, R.left_leg_front!, mirrorHorizontal(pixels.leg_front), palette, threshold)
   paintHexGrid(buf, R.right_leg_right!, pixels.leg_side, palette, threshold)
+  paintHexGrid(buf, R.right_leg_left!, mirrorHorizontal(pixels.leg_side), palette, threshold)  // inner face of right leg
   paintHexGrid(buf, R.left_leg_left!, mirrorHorizontal(pixels.leg_side), palette, threshold)
+  paintHexGrid(buf, R.left_leg_right!, pixels.leg_side, palette, threshold)                    // inner face of left leg
   paintHexGrid(buf, R.right_leg_back!, pixels.leg_back, palette, threshold)
   paintHexGrid(buf, R.left_leg_back!, mirrorHorizontal(pixels.leg_back), palette, threshold)
 

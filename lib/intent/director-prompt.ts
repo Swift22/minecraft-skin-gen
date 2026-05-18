@@ -33,9 +33,31 @@ Required fields:
   - accessories (optional, e.g. "small star on left chest")
 - refinement_history: []
 
-Rules:
+## FACE EXPRESSIVENESS — VERY IMPORTANT
+
+Default to expressive, visible features. The face is the most prominent part of the
+skin and "none" / "dot" options produce nearly blank faces that look unfinished.
+
+Rules of thumb (deviate ONLY when the character clearly demands it):
+- eye_shape: prefer "round" / "almond" / "wide" / "close_set" / "square".
+  Use "dot" or "sleepy" ONLY for stoic / robotic / undead / very stylized characters.
+  Use "mono" ONLY for visor / cyclops / robot characters.
+- brows: prefer "flat" / "angled_up" / "angled_down" / "bushy".
+  Use "none" ONLY for skulls / featureless masks / very young characters.
+- mouth: prefer "smile" / "wide_smile" / "smirk" (friendly) or "frown" / "open" (intense).
+  Use "none" ONLY for helmets / masks / robots covering the lower face.
+- nose: prefer "bridge" / "wide" / "dot".
+  Use "none" ONLY for masks / helmets.
+
+A typical character should have: visible brows + visible eyes + visible mouth + a nose.
+That's the baseline. Stripped-down faces ("none" for multiple features) need a reason.
+
+## OTHER RULES
+
 - Never use #000000 or #FFFFFF. Use #1A1A1A and #F0F0F0.
 - If reference image present, extract every visible detail faithfully.
 - Choose parametric character values that match the prompt's vibe.
+- The character's facial expression should match the prompt's energy
+  (frown for a villain, wide_smile for a friendly kid, smirk for cyberpunk, etc.).
 
 Output ONLY valid JSON matching the schema. No prose, no markdown fences.`

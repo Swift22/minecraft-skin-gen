@@ -31,13 +31,61 @@ Layout (rows are 0-indexed top-to-bottom):
   Arm:   row 0 shoulder cap, 1-9 main, 10-11 cuff
   Leg:   rows 0-7 pants, 8-11 boots
 
-Output: ONE JSON object with one key per region listed above. Each value is a 2D array
-of hex color strings (row major). Use "" for transparent pixels (only in outer/optional layers).
+## STYLE — CRITICAL
 
-Symmetry note: ONLY paint torso_side, arm_front, arm_side, arm_back, leg_front, leg_side,
-leg_back. The system mirrors them to the left side automatically — do NOT include left_* keys.
+Draw like a good Minecraft skin: BOLD FLAT COLOR BLOCKS with CLEAN TRIM LINES.
+
+Do NOT:
+- Scatter random single-pixel variations across a region (no "stippling" / "speckling" /
+  "noise"). That makes the skin look like dithered static.
+- Dither between two close palette colors pixel-by-pixel to fake gradients.
+- Place single off-color pixels in the middle of a solid block "for texture".
+
+DO:
+- Use the same color across a whole row or whole region where possible.
+- Group color changes into clean lines: a 1-pixel-tall belt stripe across row 8,
+  a 2-pixel-wide vertical zipper down the chest, a horizontal collar at rows 0-1.
+- Make trim lines run STRAIGHT (full row or full column of the same color, not jagged).
+- Pick ONE base color for each region and decorate with 1-2 clean accents.
+
+Example good torso_front (knight in blue with gold trim and dark belt):
+[
+  ["#2A5099","#2A5099","#2A5099","#2A5099","#2A5099","#2A5099","#2A5099","#2A5099"],
+  ["#2A5099","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#2A5099"],
+  ["#1C3D73","#1C3D73","#1C3D73","#D4AA55","#D4AA55","#1C3D73","#1C3D73","#1C3D73"],
+  ["#1C3D73","#1C3D73","#1C3D73","#D4AA55","#D4AA55","#1C3D73","#1C3D73","#1C3D73"],
+  ["#1C3D73","#1C3D73","#1C3D73","#D4AA55","#D4AA55","#1C3D73","#1C3D73","#1C3D73"],
+  ["#1C3D73","#1C3D73","#1C3D73","#D4AA55","#D4AA55","#1C3D73","#1C3D73","#1C3D73"],
+  ["#1C3D73","#1C3D73","#1C3D73","#D4AA55","#D4AA55","#1C3D73","#1C3D73","#1C3D73"],
+  ["#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73"],
+  ["#1A1428","#1A1428","#1A1428","#1A1428","#1A1428","#1A1428","#1A1428","#1A1428"],
+  ["#1A1428","#1A1428","#1A1428","#1A1428","#1A1428","#1A1428","#1A1428","#1A1428"],
+  ["#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73"],
+  ["#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73"]
+]
+Notice: shoulder cap row (lighter), main body (mid blue), straight vertical gold trim in
+the middle, full dark belt rows, lower garment back to mid blue. Zero noise pixels.
+
+## SYMMETRY
+
+ONLY paint torso_side, arm_front, arm_side, arm_back, leg_front, leg_side, leg_back.
+The system mirrors them to the left side automatically — do NOT include left_* keys.
+
+## OUTPUT
+
+ONE JSON object with one key per region listed above. Each value is a 2D array of hex
+color strings (row major). Use "" for transparent pixels (only in outer/optional layers).
 
 ${ctx}`
 }
 
-export const ARTIST_SYSTEM_INSTRUCTION = `You are a Minecraft skin pixel artist. You draw pixel grids for body regions of a 64×64 player skin. Draw from the palette; you may use a few transition shades for shading. Never use #000000 or #FFFFFF — use #1A1A1A and #F0F0F0. Output ONLY valid JSON. No prose, no markdown fences.`
+export const ARTIST_SYSTEM_INSTRUCTION = `You are a Minecraft skin pixel artist. You draw pixel grids for body regions of a 64×64 player skin.
+
+Style rules (these matter more than the prompt — break them and the output looks bad):
+- BOLD FLAT COLOR BLOCKS, not pixel noise.
+- CLEAN HORIZONTAL OR VERTICAL TRIM LINES (full rows / full columns of one color).
+- Each region uses 1 base color + 1-2 clean accents. NOT a random scatter of palette colors.
+- No stippling, no dithering, no single-pixel "texture" variations.
+- Never use #000000 or #FFFFFF — use #1A1A1A and #F0F0F0.
+
+Output ONLY valid JSON. No prose, no markdown fences.`

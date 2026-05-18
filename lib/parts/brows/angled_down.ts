@@ -1,15 +1,13 @@
 import type { PartMask } from '../types'
 
-// head_front rows 1-2, outer pixels raised (angry look):
-// row 1 (idx 0) cols 1 and 6 (1-indexed = idx 0 and 5)
-// row 2 (idx 1) cols 2 and 5 (1-indexed = idx 1 and 4)
+// Angled down: inner ends lifted, outer drops (angry / serious).
 export const angled_down: PartMask = [
-  ['H', '.', '.', '.', '.', 'H', '.', '.'], // row 0 — cols 1 and 6 (outer pixels higher)
-  ['.', 'H', '.', '.', 'H', '.', '.', '.'], // row 1 — cols 2 and 5 (inner pixels lower)
-  ['.', '.', '.', '.', '.', '.', '.', '.'], // row 2
-  ['.', '.', '.', '.', '.', '.', '.', '.'], // row 3
-  ['.', '.', '.', '.', '.', '.', '.', '.'], // row 4
-  ['.', '.', '.', '.', '.', '.', '.', '.'], // row 5
-  ['.', '.', '.', '.', '.', '.', '.', '.'], // row 6
-  ['.', '.', '.', '.', '.', '.', '.', '.'], // row 7
+  ['.', '.', '.', '.', '.', '.', '.', '.'],
+  ['.', '.', '.', 'H', 'H', '.', '.', '.'], // row 1 — inner tips raised
+  ['.', 'H', 'H', '.', '.', 'H', 'H', '.'], // row 2 — outer brow drops
+  ['.', '.', '.', '.', '.', '.', '.', '.'],
+  ['.', '.', '.', '.', '.', '.', '.', '.'],
+  ['.', '.', '.', '.', '.', '.', '.', '.'],
+  ['.', '.', '.', '.', '.', '.', '.', '.'],
+  ['.', '.', '.', '.', '.', '.', '.', '.'],
 ]

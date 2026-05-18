@@ -10,34 +10,42 @@ export const hairStyleEnum = z.enum(['classic','bangs','side_part','mohawk','flu
 export const hairLengthEnum = z.enum(['short','medium','long','very_long'])
 export const earTemplateEnum = z.enum(['none','round','pointy','cat','fox','bunny','wolf','elf'])
 export const styleEnum = z.enum(['retro','cyberpunk','fantasy','modern','arcade','medieval','futuristic','horror'])
+export const faceTemplateEnum = z.enum([
+  'classic_hero','bangs_smile','side_part','wide_face_nose','dot_eyes','mohawk',
+  'fluffy_hair','long_front_hair','round_face_smile','frown_serious','no_hair_bald',
+  'close_set_eyes','wide_spaced_eyes','nose_and_mouth','sleepy_halfopen','feminine_round',
+])
 
 export const characterSchema = z.object({
   skin_tone: hex,
+  // face_template: when set, used as a cohesive full-face design.
+  // When null/omitted, falls back to parametric composition.
+  face_template: faceTemplateEnum.nullish(),
   eye_shape: eyeShapeEnum,
   eye_color: hex,
   eye_white: hex.default('#F0EFEB'),
   brows: browShapeEnum.default('flat'),
   mouth: mouthShapeEnum.default('smile'),
-  mouth_color: hex.optional(),
+  mouth_color: hex.nullish(),
   nose: noseShapeEnum.default('dot'),
-  nose_shadow: hex.optional(),
+  nose_shadow: hex.nullish(),
   hair_style: hairStyleEnum,
   hair_length: hairLengthEnum.default('medium'),
   hair_color: hex,
-  hair_accent_color: hex.optional(),
+  hair_accent_color: hex.nullish(),
   ear_template: earTemplateEnum.default('none'),
-  ear_color: hex.optional(),
-  inner_ear_color: hex.optional(),
+  ear_color: hex.nullish(),
+  inner_ear_color: hex.nullish(),
 })
 
 export const outfitSchema = z.object({
   torso: z.string().min(1),
   arms: z.string().min(1),
   legs: z.string().min(1),
-  jacket: z.string().optional(),
-  sleeves: z.string().optional(),
-  pants_outer: z.string().optional(),
-  accessories: z.string().optional(),
+  jacket: z.string().nullish(),
+  sleeves: z.string().nullish(),
+  pants_outer: z.string().nullish(),
+  accessories: z.string().nullish(),
 })
 
 export const refinementEventSchema = z.object({

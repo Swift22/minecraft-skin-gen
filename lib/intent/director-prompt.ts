@@ -8,6 +8,11 @@ Required fields:
 - palette_mode: "soft" (default)
 - character: parametric face/hair/ear parts. Allowed values:
   - skin_tone: warm lifelike hex (e.g. #C4956A warm, #F5D6B8 light, #8D5524 dark — never gray or pure white)
+  - face_template (RECOMMENDED — see below): one of
+      classic_hero | bangs_smile | side_part | wide_face_nose | dot_eyes | mohawk |
+      fluffy_hair | long_front_hair | round_face_smile | frown_serious | no_hair_bald |
+      close_set_eyes | wide_spaced_eyes | nose_and_mouth | sleepy_halfopen | feminine_round
+    Or null to fall back to the parametric eye/brow/mouth/nose stack.
   - eye_shape: round | almond | wide | close_set | sleepy | dot | square | mono
   - eye_color: hex
   - eye_white: hex (default #F0EFEB)
@@ -33,24 +38,46 @@ Required fields:
   - accessories (optional, e.g. "small star on left chest")
 - refinement_history: []
 
-## FACE EXPRESSIVENESS — VERY IMPORTANT
+## FACE — VERY IMPORTANT
 
-Default to expressive, visible features. The face is the most prominent part of the
-skin and "none" / "dot" options produce nearly blank faces that look unfinished.
+ALWAYS prefer to set a face_template. Templates are hand-designed cohesive faces
+(eyes + brows + mouth + nose + jaw shading all coordinated). They look much better
+than the parametric stack. Only set face_template = null for unusual prompts the
+templates can't represent.
 
-Rules of thumb (deviate ONLY when the character clearly demands it):
-- eye_shape: prefer "round" / "almond" / "wide" / "close_set" / "square".
-  Use "dot" or "sleepy" ONLY for stoic / robotic / undead / very stylized characters.
-  Use "mono" ONLY for visor / cyclops / robot characters.
-- brows: prefer "flat" / "angled_up" / "angled_down" / "bushy".
-  Use "none" ONLY for skulls / featureless masks / very young characters.
-- mouth: prefer "smile" / "wide_smile" / "smirk" (friendly) or "frown" / "open" (intense).
-  Use "none" ONLY for helmets / masks / robots covering the lower face.
-- nose: prefer "bridge" / "wide" / "dot".
-  Use "none" ONLY for masks / helmets.
+When you pick face_template, the hair_style you choose should visually match the
+template's hair pattern in the front view:
 
-A typical character should have: visible brows + visible eyes + visible mouth + a nose.
-That's the baseline. Stripped-down faces ("none" for multiple features) need a reason.
+  Template              → Matching hair_style options
+  -----------------------------------------------------------------
+  classic_hero          → classic, bun, ponytail (full hair on top + sides)
+  bangs_smile           → bangs (long bangs covering forehead)
+  side_part             → side_part (asymmetric)
+  wide_face_nose        → classic, ponytail (full coverage)
+  dot_eyes              → classic, fluffy (full coverage, simple stylized face)
+  mohawk                → mohawk (center hair strip)
+  fluffy_hair           → fluffy (irregular wispy)
+  long_front_hair       → curtain (long bangs covering face sides)
+  round_face_smile      → classic, fluffy (friendly / cute characters)
+  frown_serious         → classic, undercut, spiky (serious / intense)
+  no_hair_bald          → bald (no hair anywhere)
+  close_set_eyes        → classic, bun (any full coverage)
+  wide_spaced_eyes      → classic, fluffy (alien / wide-face characters)
+  nose_and_mouth        → classic, side_part (defined features)
+  sleepy_halfopen       → classic, dreads, fluffy (heavy lidded characters)
+  feminine_round        → classic, bun, ponytail (feminine / cute)
+
+If face_template is set, eye_shape / brows / mouth / nose still need to be valid values
+(the schema requires them) but they are IGNORED at render time. Pick reasonable
+defaults: round eyes, flat brows, smile mouth, bridge nose.
+
+If face_template is null (parametric fallback), then eye_shape / brows / mouth / nose
+matter — pick expressive options:
+- eye_shape: prefer round / almond / wide / close_set / square.
+- brows: prefer flat / angled_up / angled_down / bushy.
+- mouth: prefer smile / wide_smile / smirk / frown / open.
+- nose: prefer bridge / wide / dot.
+Avoid "none" / "dot" combinations that produce blank faces.
 
 ## OTHER RULES
 

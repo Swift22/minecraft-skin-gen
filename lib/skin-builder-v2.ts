@@ -12,6 +12,7 @@ import type { NoseShape } from './parts/noses/index'
 import type { HairStyle } from './parts/hair-styles/index'
 import type { HairLength } from './parts/hair-lengths/index'
 import type { EarTemplate } from './parts/ears/index'
+import type { FaceTemplateName } from './parts/faces/index'
 
 const W = 64
 const H = 64
@@ -25,23 +26,24 @@ export interface SkinIntent {
   palette_mode: 'soft' | 'hard'
   character: {
     skin_tone: string
+    face_template?: FaceTemplateName | null
     eye_shape: EyeShape
     eye_color: string
     eye_white: string
     brows: BrowShape
     mouth: MouthShape
-    mouth_color?: string
+    mouth_color?: string | null
     nose: NoseShape
-    nose_shadow?: string
+    nose_shadow?: string | null
     hair_style: HairStyle
     hair_length: HairLength
     hair_color: string
-    hair_accent_color?: string
+    hair_accent_color?: string | null
     ear_template: EarTemplate
-    ear_color?: string
-    inner_ear_color?: string
+    ear_color?: string | null
+    inner_ear_color?: string | null
   }
-  outfit: { torso: string; arms: string; legs: string; jacket?: string; sleeves?: string; pants_outer?: string; accessories?: string }
+  outfit: { torso: string; arms: string; legs: string; jacket?: string | null; sleeves?: string | null; pants_outer?: string | null; accessories?: string | null }
   refinement_history: unknown[]
 }
 
@@ -164,9 +166,10 @@ export async function buildSkinPngV2(intent: SkinIntent, pixels: SkinPixels): Pr
   const mouth_color = intent.character.mouth_color ?? '#5C3A2E'
   const nose_shadow = intent.character.nose_shadow ?? '#A07050'
 
-  // 1. Parametric face → head_front
+  // 1. Face → head_front (template if face_template set, else parametric stack)
   const face = composeFace({
     skin_tone: intent.character.skin_tone,
+    face_template: intent.character.face_template,
     eye_shape: intent.character.eye_shape,
     eye_color: intent.character.eye_color,
     eye_white: intent.character.eye_white,

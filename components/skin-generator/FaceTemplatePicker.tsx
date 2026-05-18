@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { FACE_TEMPLATES, type Px } from '@/lib/face-templates'
+import { FACE_TEMPLATES, type Px } from '@/lib/legacy/face-templates'
 
 /** Preview palette for rendering template thumbnails */
 const PX_COLORS: Record<Px, string> = {

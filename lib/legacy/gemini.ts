@@ -1,7 +1,7 @@
 import { GoogleGenAI, type Part } from '@google/genai'
 import { regionColorMapSchema, type RegionColorMap } from './region-color-map'
-import { env } from './env'
-import { SYSTEM_INSTRUCTION } from './gemini-system-prompt'
+import { env } from '../env'
+import { SYSTEM_INSTRUCTION } from '../gemini-system-prompt'
 
 const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY })
 

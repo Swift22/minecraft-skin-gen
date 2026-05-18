@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, integer, timestamp } from 'drizzle-orm/pg-core'
+import { pgTable, uuid, text, integer, timestamp, jsonb } from 'drizzle-orm/pg-core'
 import { sql } from 'drizzle-orm'
 
 /** Mirrors auth.users.id from Supabase Auth — stores subscription and credit tracking */
@@ -55,6 +55,10 @@ export const skinGenerations = pgTable('skin_generations', {
     .notNull()
     .default(sql`now()`),
   completedAt: timestamp('completed_at', { withTimezone: true }),
+  intent: jsonb('intent'),                      // SkinIntent | null
+  pixels: jsonb('pixels'),                      // SkinPixels | null
+  manualOverrides: jsonb('manual_overrides'),   // string[] | null
+  schemaVersion: text('schema_version').default('v1'), // 'v1' | 'v2'
 })
 
 /** Idempotency table for Stripe webhook processing */

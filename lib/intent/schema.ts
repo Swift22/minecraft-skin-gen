@@ -14,6 +14,8 @@ export const faceTemplateEnum = z.enum([
   'classic_hero','bangs_smile','side_part','wide_face_nose','dot_eyes','mohawk',
   'fluffy_hair','long_front_hair','round_face_smile','frown_serious','no_hair_bald',
   'close_set_eyes','wide_spaced_eyes','nose_and_mouth','sleepy_halfopen','feminine_round',
+  'anime_big_eyes','bearded_old','hooded_face','robot_visor','skull_skeleton',
+  'mask_ninja','chubby_kid','scarred_warrior','glasses_nerd','smug_evil',
 ])
 
 export const characterSchema = z.object({

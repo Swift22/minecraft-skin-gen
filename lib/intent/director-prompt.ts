@@ -11,7 +11,9 @@ Required fields:
   - face_template (RECOMMENDED — see below): one of
       classic_hero | bangs_smile | side_part | wide_face_nose | dot_eyes | mohawk |
       fluffy_hair | long_front_hair | round_face_smile | frown_serious | no_hair_bald |
-      close_set_eyes | wide_spaced_eyes | nose_and_mouth | sleepy_halfopen | feminine_round
+      close_set_eyes | wide_spaced_eyes | nose_and_mouth | sleepy_halfopen | feminine_round |
+      anime_big_eyes | bearded_old | hooded_face | robot_visor | skull_skeleton |
+      mask_ninja | chubby_kid | scarred_warrior | glasses_nerd | smug_evil
     Or null to fall back to the parametric eye/brow/mouth/nose stack.
   - eye_shape: round | almond | wide | close_set | sleepy | dot | square | mono
   - eye_color: hex
@@ -66,6 +68,16 @@ template's hair pattern in the front view:
   nose_and_mouth        → classic, side_part (defined features)
   sleepy_halfopen       → classic, dreads, fluffy (heavy lidded characters)
   feminine_round        → classic, bun, ponytail (feminine / cute)
+  anime_big_eyes        → classic, bun, ponytail, fluffy (kawaii / anime characters)
+  bearded_old           → classic, bald (old wizards, dwarves, sages)
+  hooded_face           → classic, bald, undercut (ranger, assassin, monk under hood)
+  robot_visor           → bald, undercut, classic (robot, android, cyborg, mech)
+  skull_skeleton        → bald (skeleton, lich, undead)
+  mask_ninja            → classic, undercut, bald (ninja, balaclava, shinobi)
+  chubby_kid            → classic, fluffy, bangs (children, baby characters, cute mascots)
+  scarred_warrior       → classic, spiky, undercut (battle-hardened, gladiator, rogue)
+  glasses_nerd          → classic, side_part, bun (scientist, scholar, intellectual)
+  smug_evil             → classic, side_part, undercut (villain, traitor, dark mage)
 
 If face_template is set, eye_shape / brows / mouth / nose still need to be valid values
 (the schema requires them) but they are IGNORED at render time. Pick reasonable

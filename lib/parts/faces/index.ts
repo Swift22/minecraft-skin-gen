@@ -15,6 +15,16 @@ import { wide_spaced_eyes } from './templates/wide_spaced_eyes'
 import { nose_and_mouth } from './templates/nose_and_mouth'
 import { sleepy_halfopen } from './templates/sleepy_halfopen'
 import { feminine_round } from './templates/feminine_round'
+import { anime_big_eyes } from './templates/anime_big_eyes'
+import { bearded_old } from './templates/bearded_old'
+import { hooded_face } from './templates/hooded_face'
+import { robot_visor } from './templates/robot_visor'
+import { skull_skeleton } from './templates/skull_skeleton'
+import { mask_ninja } from './templates/mask_ninja'
+import { chubby_kid } from './templates/chubby_kid'
+import { scarred_warrior } from './templates/scarred_warrior'
+import { glasses_nerd } from './templates/glasses_nerd'
+import { smug_evil } from './templates/smug_evil'
 
 export const faceTemplates = createRegistry({
   classic_hero,
@@ -33,6 +43,16 @@ export const faceTemplates = createRegistry({
   nose_and_mouth,
   sleepy_halfopen,
   feminine_round,
+  anime_big_eyes,
+  bearded_old,
+  hooded_face,
+  robot_visor,
+  skull_skeleton,
+  mask_ninja,
+  chubby_kid,
+  scarred_warrior,
+  glasses_nerd,
+  smug_evil,
 })
 
 export type FaceTemplateName = ReturnType<typeof faceTemplates.names>[number]

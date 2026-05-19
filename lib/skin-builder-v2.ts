@@ -99,6 +99,32 @@ const R: Record<string, Region> = {
   left_leg_right:  { x: 16, y: 52, w: 4, h: 12 },
   left_leg_left:   { x: 24, y: 52, w: 4, h: 12 },
   left_leg_back:   { x: 28, y: 52, w: 4, h: 12 },
+
+  // OUTER (second) layer UV regions — these sit on top of the inner layer in
+  // the 3D model. Per the standard 64×64 Minecraft skin layout:
+  //   jacket  = outer torso       (cols 16-39, rows 32-47)
+  //   sleeve  = outer arm         (cols 40-63 right, 48-63 left, rows 32-47/48-63)
+  //   pants   = outer leg         (cols 0-15 right, 0-15 left, rows 32-47/48-63)
+  jacket_front:        { x: 20, y: 36, w: 8, h: 12 },
+  jacket_back:         { x: 32, y: 36, w: 8, h: 12 },
+  jacket_right:        { x: 16, y: 36, w: 4, h: 12 },
+  jacket_left:         { x: 28, y: 36, w: 4, h: 12 },
+  right_sleeve_front:  { x: 44, y: 36, w: 4, h: 12 },
+  right_sleeve_right:  { x: 40, y: 36, w: 4, h: 12 },
+  right_sleeve_left:   { x: 48, y: 36, w: 4, h: 12 },
+  right_sleeve_back:   { x: 52, y: 36, w: 4, h: 12 },
+  left_sleeve_front:   { x: 52, y: 52, w: 4, h: 12 },
+  left_sleeve_right:   { x: 48, y: 52, w: 4, h: 12 },
+  left_sleeve_left:    { x: 56, y: 52, w: 4, h: 12 },
+  left_sleeve_back:    { x: 60, y: 52, w: 4, h: 12 },
+  right_pants_front:   { x: 4,  y: 36, w: 4, h: 12 },
+  right_pants_right:   { x: 0,  y: 36, w: 4, h: 12 },
+  right_pants_left:    { x: 8,  y: 36, w: 4, h: 12 },
+  right_pants_back:    { x: 12, y: 36, w: 4, h: 12 },
+  left_pants_front:    { x: 4,  y: 52, w: 4, h: 12 },
+  left_pants_right:    { x: 0,  y: 52, w: 4, h: 12 },
+  left_pants_left:     { x: 8,  y: 52, w: 4, h: 12 },
+  left_pants_back:     { x: 12, y: 52, w: 4, h: 12 },
 }
 
 function parseHex(hex: string): RGB | null {
@@ -240,20 +266,35 @@ export async function buildSkinPngV2(intent: SkinIntent, pixels: SkinPixels): Pr
   paintHexGrid(buf, R.right_leg_back!, pixels.leg_back, palette, threshold)
   paintHexGrid(buf, R.left_leg_back!, mirrorHorizontal(pixels.leg_back), palette, threshold)
 
-  // 5. Optional outer layers
-  if (pixels.jacket_front) paintHexGrid(buf, R.torso_front!, pixels.jacket_front, palette, threshold)
-  if (pixels.jacket_back) paintHexGrid(buf, R.torso_back!, pixels.jacket_back, palette, threshold)
+  // 5. Optional outer layers — paint onto the SECOND-layer UV regions (rows 32-63),
+  //    NOT onto the inner torso/arm/leg.
+  //    The 3D model renders these as a slightly-larger second skin over the inner body.
+  if (pixels.jacket_front) paintHexGrid(buf, R.jacket_front!, pixels.jacket_front, palette, threshold)
+  if (pixels.jacket_back) paintHexGrid(buf, R.jacket_back!, pixels.jacket_back, palette, threshold)
   if (pixels.jacket_side) {
-    paintHexGrid(buf, R.torso_right!, pixels.jacket_side, palette, threshold)
-    paintHexGrid(buf, R.torso_left!, mirrorHorizontal(pixels.jacket_side), palette, threshold)
+    paintHexGrid(buf, R.jacket_right!, pixels.jacket_side, palette, threshold)
+    paintHexGrid(buf, R.jacket_left!, mirrorHorizontal(pixels.jacket_side), palette, threshold)
   }
   if (pixels.sleeve_front) {
-    paintHexGrid(buf, R.right_arm_front!, pixels.sleeve_front, palette, threshold)
-    paintHexGrid(buf, R.left_arm_front!, mirrorHorizontal(pixels.sleeve_front), palette, threshold)
+    paintHexGrid(buf, R.right_sleeve_front!, pixels.sleeve_front, palette, threshold)
+    paintHexGrid(buf, R.left_sleeve_front!, mirrorHorizontal(pixels.sleeve_front), palette, threshold)
+    // Also paint the OTHER sides of the sleeve cuboid for solid coverage; mirror as needed.
+    paintHexGrid(buf, R.right_sleeve_right!, pixels.sleeve_front, palette, threshold)
+    paintHexGrid(buf, R.right_sleeve_left!, mirrorHorizontal(pixels.sleeve_front), palette, threshold)
+    paintHexGrid(buf, R.right_sleeve_back!, pixels.sleeve_front, palette, threshold)
+    paintHexGrid(buf, R.left_sleeve_right!, mirrorHorizontal(pixels.sleeve_front), palette, threshold)
+    paintHexGrid(buf, R.left_sleeve_left!, pixels.sleeve_front, palette, threshold)
+    paintHexGrid(buf, R.left_sleeve_back!, mirrorHorizontal(pixels.sleeve_front), palette, threshold)
   }
   if (pixels.pants_outer_front) {
-    paintHexGrid(buf, R.right_leg_front!, pixels.pants_outer_front, palette, threshold)
-    paintHexGrid(buf, R.left_leg_front!, mirrorHorizontal(pixels.pants_outer_front), palette, threshold)
+    paintHexGrid(buf, R.right_pants_front!, pixels.pants_outer_front, palette, threshold)
+    paintHexGrid(buf, R.left_pants_front!, mirrorHorizontal(pixels.pants_outer_front), palette, threshold)
+    paintHexGrid(buf, R.right_pants_right!, pixels.pants_outer_front, palette, threshold)
+    paintHexGrid(buf, R.right_pants_left!, mirrorHorizontal(pixels.pants_outer_front), palette, threshold)
+    paintHexGrid(buf, R.right_pants_back!, pixels.pants_outer_front, palette, threshold)
+    paintHexGrid(buf, R.left_pants_right!, mirrorHorizontal(pixels.pants_outer_front), palette, threshold)
+    paintHexGrid(buf, R.left_pants_left!, pixels.pants_outer_front, palette, threshold)
+    paintHexGrid(buf, R.left_pants_back!, mirrorHorizontal(pixels.pants_outer_front), palette, threshold)
   }
 
   return await sharp(buf, { raw: { width: W, height: H, channels: C } }).png().toBuffer()

@@ -16,6 +16,14 @@ function parseHex(hex: string): [number, number, number] {
   return [parseInt(m[1]!.slice(0, 2), 16), parseInt(m[1]!.slice(2, 4), 16), parseInt(m[1]!.slice(4, 6), 16)]
 }
 
+function lerp(a: [number, number, number], b: [number, number, number], t: number): [number, number, number] {
+  return [
+    Math.round(a[0] + (b[0] - a[0]) * t),
+    Math.round(a[1] + (b[1] - a[1]) * t),
+    Math.round(a[2] + (b[2] - a[2]) * t),
+  ]
+}
+
 function pxColor(px: Px, input: HairComposerInput): [number, number, number] | null {
   switch (px) {
     case 'S': return parseHex(input.skin_tone)
@@ -55,7 +63,7 @@ export interface HairOutput {
 export function composeHair(input: HairComposerInput): HairOutput {
   const baseBundle = hairStyles.get(input.hair_style)
   const bundle = hairLengths.get(input.hair_length)(baseBundle)
-  return {
+  const out: HairOutput = {
     head_top:           maskToBuffer(bundle.head_top, input),
     head_right:         maskToBuffer(bundle.head_right, input),
     head_left:          maskToBuffer(bundle.head_left, input),
@@ -68,4 +76,26 @@ export function composeHair(input: HairComposerInput): HairOutput {
     hat_left:           maskToBuffer(bundle.hat_left, input),
     hat_back:           maskToBuffer(bundle.hat_back, input),
   }
+
+  // Hair highlight strip on head_top: paint a lighter shade onto hair-color pixels
+  // along the crown (top center) for dimensional depth. Skip skin-toned pixels (bald).
+  const hairBase = parseHex(input.hair_color)
+  const hairLight = lerp(hairBase, [255, 255, 255], 0.22)
+  // Crown highlight: rows 2-3, cols 3-4 of head_top (top-back of skull catches light).
+  const highlightPositions: Array<[number, number]> = [[2, 3], [2, 4]]
+  for (const [row, col] of highlightPositions) {
+    const idx = (row * 8 + col) * 4
+    // Only highlight if pixel is actual hair_color (not skin S, not transparent).
+    if (
+      out.head_top[idx] === hairBase[0] &&
+      out.head_top[idx + 1] === hairBase[1] &&
+      out.head_top[idx + 2] === hairBase[2]
+    ) {
+      out.head_top[idx] = hairLight[0]
+      out.head_top[idx + 1] = hairLight[1]
+      out.head_top[idx + 2] = hairLight[2]
+    }
+  }
+
+  return out
 }

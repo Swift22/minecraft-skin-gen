@@ -34,6 +34,14 @@ function parseHex(hex: string): [number, number, number] {
   ]
 }
 
+function lerp(a: [number, number, number], b: [number, number, number], t: number): [number, number, number] {
+  return [
+    Math.round(a[0] + (b[0] - a[0]) * t),
+    Math.round(a[1] + (b[1] - a[1]) * t),
+    Math.round(a[2] + (b[2] - a[2]) * t),
+  ]
+}
+
 function pxColor(px: Px, ctx: FaceComposerInput): [number, number, number] | null {
   switch (px) {
     case 'S': return parseHex(ctx.skin_tone)
@@ -85,40 +93,65 @@ export function composeFace(input: FaceComposerInput): Buffer {
 
   if (input.face_template) {
     paintLayer(buf, faceTemplates.get(input.face_template), input)
-    return buf
+  } else {
+    paintLayer(buf, brows.get(input.brows), input)
+    paintLayer(buf, eyes.get(input.eye_shape), input)
+    paintLayer(buf, noses.get(input.nose), input)
+    paintLayer(buf, mouths.get(input.mouth), input)
+    paintLayer(buf, hairStyles.get(input.hair_style).head_front_overlay, input)
   }
 
-  // Parametric fallback with holistic shading layers:
-  //   1. Cheek shading (faint darker skin at cols 0,7 rows 4-6)
-  //   2. Jaw line (1 row of darker skin at row 7 inner cols)
-  //   3. Features: brows, eyes, nose, mouth
-  //   4. Hair front overlay from hair_style
-  paintHolisticShading(buf, input)
-  paintLayer(buf, brows.get(input.brows), input)
-  paintLayer(buf, eyes.get(input.eye_shape), input)
-  paintLayer(buf, noses.get(input.nose), input)
-  paintLayer(buf, mouths.get(input.mouth), input)
-  paintLayer(buf, hairStyles.get(input.hair_style).head_front_overlay, input)
+  // Skin shading layer (applies to BOTH paths): paint highlight + shadow pixels
+  // ONLY where the buffer is still exposed skin_tone (i.e., the template/parametric
+  // didn't draw a feature there). Gives the face dimensional depth without ever
+  // overdrawing eyes, hair, or mouth.
+  applySkinShading(buf, input)
+
   return buf
 }
 
 /**
- * Add subtle cheek/jaw shading to give the parametric face dimensional definition.
- * Uses nose_shadow color (slightly darker than skin) at outer cheek pixels and
- * along the jawline. Painted BEFORE features so they stack on top cleanly.
+ * Paint skin highlights (forehead, cheek tops) and shadows (jaw, outer cheeks)
+ * onto pixels that are still pure skin_tone. Preserves any template/parametric feature.
  */
-function paintHolisticShading(buf: Buffer, input: FaceComposerInput) {
+function applySkinShading(buf: Buffer, input: FaceComposerInput) {
+  const skin = parseHex(input.skin_tone)
+  const highlight = lerp(skin, [255, 255, 255], 0.15)
   const shadow = parseHex(input.nose_shadow)
-  // Outer cheek shading: cols 0 and 7, rows 5-6 (sides of lower face).
-  const cheekPixels: Array<[number, number]> = [
-    [5, 0], [6, 0],
-    [5, 7], [6, 7],
+
+  // Highlight pixels: forehead top-center catches light, upper cheek bones.
+  const highlightPositions: Array<[number, number]> = [
+    [3, 3], [3, 4],   // forehead between eyes
+    [4, 1], [4, 6],   // cheekbones outer
   ]
-  for (const [row, col] of cheekPixels) {
-    const idx = (row * 8 + col) * 4
-    buf[idx] = shadow[0]
-    buf[idx + 1] = shadow[1]
-    buf[idx + 2] = shadow[2]
+  // Shadow pixels: jaw line corners, sides of chin, neck shadow.
+  const shadowPositions: Array<[number, number]> = [
+    [5, 0], [5, 7],   // outer cheek shadow
+    [6, 0], [6, 7],   // jaw outer
+    [7, 0], [7, 7],   // chin corners (neck shadow)
+  ]
+
+  for (const [row, col] of highlightPositions) {
+    paintIfSkin(buf, row, col, skin, highlight)
+  }
+  for (const [row, col] of shadowPositions) {
+    paintIfSkin(buf, row, col, skin, shadow)
+  }
+}
+
+/** Write `replacement` to (row,col) only if that pixel is currently pure skin_tone. */
+function paintIfSkin(
+  buf: Buffer,
+  row: number,
+  col: number,
+  skin: [number, number, number],
+  replacement: [number, number, number],
+) {
+  const idx = (row * 8 + col) * 4
+  if (buf[idx] === skin[0] && buf[idx + 1] === skin[1] && buf[idx + 2] === skin[2]) {
+    buf[idx] = replacement[0]
+    buf[idx + 1] = replacement[1]
+    buf[idx + 2] = replacement[2]
     buf[idx + 3] = 255
   }
 }

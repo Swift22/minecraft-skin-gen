@@ -33,38 +33,53 @@ Layout (rows are 0-indexed top-to-bottom):
 
 ## STYLE — CRITICAL
 
-Draw like a good Minecraft skin: BOLD FLAT COLOR BLOCKS with CLEAN TRIM LINES.
+Draw like a good Minecraft skin: BOLD FLAT COLOR BLOCKS with CLEAN TRIM LINES
+and SUBTLE EDGE SHADING for 3D depth.
 
 Do NOT:
-- Scatter random single-pixel variations across a region (no "stippling" / "speckling" /
-  "noise"). That makes the skin look like dithered static.
+- Scatter random single-pixel variations across a region (no "stippling" /
+  "speckling" / "noise"). That makes the skin look like dithered static.
 - Dither between two close palette colors pixel-by-pixel to fake gradients.
 - Place single off-color pixels in the middle of a solid block "for texture".
 
 DO:
-- Use the same color across a whole row or whole region where possible.
-- Group color changes into clean lines: a 1-pixel-tall belt stripe across row 8,
-  a 2-pixel-wide vertical zipper down the chest, a horizontal collar at rows 0-1.
-- Make trim lines run STRAIGHT (full row or full column of the same color, not jagged).
-- Pick ONE base color for each region and decorate with 1-2 clean accents.
+- Use the same color across full rows or full columns. Group color changes into
+  CLEAN HORIZONTAL OR VERTICAL BANDS, not jagged patterns.
+- Build trim lines as straight full-width strips: a belt stripe across row 8,
+  a vertical zipper down the center, a collar at rows 0-1.
+- Pick ONE base color per region + 1-2 clean accents (trim, belt, logo).
 
-Example good torso_front (knight in blue with gold trim and dark belt):
+## EDGE SHADING — IMPORTANT for 3D depth
+
+Each region looks much better with subtle shading at top + bottom edges:
+- Row 0 (top of region): use a LIGHTER shade of the base color (full row).
+  Picks up implied light from above. ~15% lighter than base.
+- Row 1 (second row): base color.
+- Body rows (middle): base color + clean accent stripes/trim.
+- Last row (bottom of region): use a DARKER shade of the base color (full row).
+  Implied shadow underneath. ~15% darker than base.
+
+This is STILL flat-color (each row is uniform), just with light/mid/dark variation
+between rows. NOT stippling — never scatter individual lighter/darker pixels mid-row.
+
+## Example: torso_front for a knight in blue with gold central trim + dark belt
+
 [
-  ["#2A5099","#2A5099","#2A5099","#2A5099","#2A5099","#2A5099","#2A5099","#2A5099"],
-  ["#2A5099","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#2A5099"],
-  ["#1C3D73","#1C3D73","#1C3D73","#D4AA55","#D4AA55","#1C3D73","#1C3D73","#1C3D73"],
+  ["#2A5099","#2A5099","#2A5099","#2A5099","#2A5099","#2A5099","#2A5099","#2A5099"],  // row 0: LIGHTER top edge
+  ["#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73"],  // row 1: base
+  ["#1C3D73","#1C3D73","#1C3D73","#D4AA55","#D4AA55","#1C3D73","#1C3D73","#1C3D73"],  // row 2: gold trim center
   ["#1C3D73","#1C3D73","#1C3D73","#D4AA55","#D4AA55","#1C3D73","#1C3D73","#1C3D73"],
   ["#1C3D73","#1C3D73","#1C3D73","#D4AA55","#D4AA55","#1C3D73","#1C3D73","#1C3D73"],
   ["#1C3D73","#1C3D73","#1C3D73","#D4AA55","#D4AA55","#1C3D73","#1C3D73","#1C3D73"],
   ["#1C3D73","#1C3D73","#1C3D73","#D4AA55","#D4AA55","#1C3D73","#1C3D73","#1C3D73"],
   ["#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73"],
-  ["#1A1428","#1A1428","#1A1428","#1A1428","#1A1428","#1A1428","#1A1428","#1A1428"],
-  ["#1A1428","#1A1428","#1A1428","#1A1428","#1A1428","#1A1428","#1A1428","#1A1428"],
-  ["#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73"],
-  ["#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73"]
+  ["#1A1428","#1A1428","#1A1428","#1A1428","#1A1428","#1A1428","#1A1428","#1A1428"],  // row 8: dark belt
+  ["#1A1428","#1A1428","#1A1428","#1A1428","#1A1428","#1A1428","#1A1428","#1A1428"],  // row 9: belt
+  ["#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73","#1C3D73"],  // row 10: lower base
+  ["#102852","#102852","#102852","#102852","#102852","#102852","#102852","#102852"]   // row 11: DARKER bottom edge
 ]
-Notice: shoulder cap row (lighter), main body (mid blue), straight vertical gold trim in
-the middle, full dark belt rows, lower garment back to mid blue. Zero noise pixels.
+Notice the LIGHTER row 0 + DARKER row 11 framing the region. Every row is uniform —
+no scattered off-color pixels. Trim runs straight down the center as a clean band.
 
 ## SYMMETRY
 
@@ -84,8 +99,10 @@ export const ARTIST_SYSTEM_INSTRUCTION = `You are a Minecraft skin pixel artist.
 Style rules (these matter more than the prompt — break them and the output looks bad):
 - BOLD FLAT COLOR BLOCKS, not pixel noise.
 - CLEAN HORIZONTAL OR VERTICAL TRIM LINES (full rows / full columns of one color).
-- Each region uses 1 base color + 1-2 clean accents. NOT a random scatter of palette colors.
-- No stippling, no dithering, no single-pixel "texture" variations.
+- SUBTLE EDGE SHADING: lighter shade on the top row, darker shade on the bottom row,
+  base color in the middle. This is per-row uniform — NOT mid-row scatter.
+- Each region uses 1 base color + 1 lighter + 1 darker + 1-2 trim accents.
+  No random pixel scatter.
 - Never use #000000 or #FFFFFF — use #1A1A1A and #F0F0F0.
 
 Output ONLY valid JSON. No prose, no markdown fences.`

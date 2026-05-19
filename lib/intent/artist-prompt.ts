@@ -164,6 +164,45 @@ collar — that's where the "puffy" comes from:
   ["","","","","","","","#F4F5FA"]
 ]
 
+### Exemplar H — Cute green-overall jacket_front (real namemc reference, 31 px)
+Light-green overall straps over a white shirt. Notice: chest area is filled
+with overalls shape, sides are transparent showing inner white shirt:
+[
+  ["","","","","","","",""],
+  ["","#A3B064","#8B9F57","#A3B064","#B1BA6C","#8B9F57","#A3B064",""],
+  ["","#B1BA6C","#8B9F57","#B1BA6C","#C2C472","#8B9F57","#B1BA6C",""],
+  ["#A3B064","#D1C975","#A3B064","#C2C472","#D1C975","#A3B064","#D1C975","#A3B064"],
+  ["#A3B164","#C2C472","","#C2C472","#C2C472","","#C2C472","#A3B064"],
+  ["#8B9F56","","","","","","","#8B9F57"],
+  ["#8B9F57","","","","","","","#8B9F57"],
+  ["","#8B9F57","","","","","#8A9F57",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""]
+]
+Note: dense detail rows 1-4 (the bib of the overalls), then strap pixels only
+at rows 5-7 (the suspenders going down), then transparent at the bottom.
+
+### Exemplar I — Cute pink-nurse jacket_front (28 px, with red cross emblem)
+Pink frilled top with WHITE accent and a small red detail in the center:
+[
+  ["","","","","","","",""],
+  ["#F690A8","","#F690A8","#FFDDDD","#FFDDDD","#FFDDDD","",""],
+  ["","#FFDADF","","#FFDDDD","#FFDDDD","#FFD3D8","#FFDDDD",""],
+  ["","#FFDDDD","#F8C8D3","#FFDDDD","#FFDDDD","#F8C8D3","#FFDDDD",""],
+  ["#F8C8D3","#FFD3D8","","#FFDADF","#FFDADF","","#FFD3D8","#F8C8D3"],
+  ["#F8C8D3","","","","","","","#F8C8D3"],
+  ["#F8C8D3","","","","","","","#F8C8D3"],
+  ["","#F8C8D3","","","","","#F8C8D3",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""],
+  ["","","","","","","",""]
+]
+Note: 4-5 pink shades for shading (#F8C8D3 darkest, #FFD3D8, #FFDADF, #FFDDDD, #FFEAE8 lightest).
+Shoulder accents at sides cols 0+7 stretch the silhouette outward.
+
 ### Exemplar G — hat_back for FLOWING HAIR effect (essential for cute / long-hair skins)
 The hat_back is HEAVILY painted with vertical stripes of hair color
 extending all the way down — that's what makes hair appear to flow past
@@ -226,6 +265,8 @@ Style guidance (analyzed from 88 popular real namemc skins):
 - STRUCTURED VARIATION: every off-base pixel traces a real garment feature
   (fold, seam, pocket, button, stripe, drawstring, zipper, armor segment,
   emblem, trim, belt). Never scatter pixels randomly.
+- NEVER USE CHECKERED PATTERNS (alternating light/dark cells in a 2D grid).
+  That's not shading — it's static. Use HORIZONTAL or VERTICAL bands.
 - INNER vs OUTER: inner torso/arms/legs are fully opaque (NEVER use "").
   Outer jacket/sleeves/pants MAY use "" for natural shaping (V-neck, open
   jacket, exposed arm between cuff and glove). But where the outer layer

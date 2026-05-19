@@ -24,7 +24,7 @@ Required fields:
   - mouth_color: hex
   - nose: none | bridge | dot | wide
   - nose_shadow: hex (slightly darker than skin_tone)
-  - hair_style: classic | bangs | side_part | mohawk | fluffy | curtain | bald | bun | ponytail | spiky | undercut | dreads | long_flowing | twin_tails | horned | antennae
+  - hair_style: classic | bangs | side_part | mohawk | fluffy | curtain | bald | bun | ponytail | spiky | undercut | dreads | long_flowing | twin_tails | horned | antennae | frog_hood
   - hair_length: short | medium | long | very_long
   - hair_color: hex
   - hair_accent_color: hex (lighter or contrasting streak/tip)
@@ -184,6 +184,10 @@ small / friendly / sweet:
   — these aggressively use the hat layer (visible flowing hair past the
   head silhouette). For asymmetric / goth / one-horn aesthetics, use horned.
   For alien / cute creatures with antennae or ears use antennae.
+  For prompts mentioning frog/animal/dino HOODIE or HOOD (a hood over the head
+  with character ears/eyes on top), use frog_hood — it wraps a hood shape
+  around the entire head plus animal-eye bumps on hat_top. Antennae alone
+  has 0% hat coverage and is wrong for hood prompts.
   Avoid plain "bangs" or "classic" for cute prompts — they don't fill the
   hat layer enough to give the cute volume effect.
 - outfit: MUST describe puffy/billowing details. e.g.

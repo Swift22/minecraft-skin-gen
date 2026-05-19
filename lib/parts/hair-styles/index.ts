@@ -15,6 +15,7 @@ import { long_flowing } from './long_flowing'
 import { twin_tails } from './twin_tails'
 import { horned } from './horned'
 import { antennae } from './antennae'
+import { frog_hood } from './frog_hood'
 
 export const hairStyles = createRegistry({
   classic,
@@ -33,5 +34,6 @@ export const hairStyles = createRegistry({
   twin_tails,
   horned,
   antennae,
+  frog_hood,
 })
 export type HairStyle = ReturnType<typeof hairStyles.names>[number]

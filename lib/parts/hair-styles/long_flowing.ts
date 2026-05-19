@@ -107,7 +107,10 @@ export const long_flowing: HairStyleBundle = {
     ['.', '.', '.', '.', '.', '.', '.', 'H'],
     ['.', '.', '.', '.', '.', '.', '.', '.'],
   ],
-  // The signature: every-other-column filled all 8 rows = flowing hair past the back.
+  // Flowing-hair signature: outer columns + center columns filled, with
+  // intentional gaps between strands. Length modifier extends columns down.
+  // Reference cute skins hover at 30-45% hat_back fill — not solid blocks.
+  // Cols 0, 2, 5, 7 have hair; cols 1, 3, 4, 6 stay empty for the wispy gaps.
   hat_back: [
     ['H', '.', 'H', '.', '.', 'H', '.', 'H'],
     ['H', '.', 'H', '.', '.', 'H', '.', 'H'],
@@ -115,7 +118,7 @@ export const long_flowing: HairStyleBundle = {
     ['H', '.', 'H', '.', '.', 'H', '.', 'H'],
     ['H', '.', 'H', '.', '.', 'H', '.', 'H'],
     ['H', '.', 'H', '.', '.', 'H', '.', 'H'],
-    ['.', 'H', '.', '.', '.', '.', 'H', '.'],
+    ['H', '.', '.', '.', '.', '.', '.', 'H'],
     ['.', '.', '.', '.', '.', '.', '.', '.'],
   ],
 }

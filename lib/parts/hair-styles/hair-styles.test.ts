@@ -18,10 +18,11 @@ const NAMES = [
   'twin_tails',
   'horned',
   'antennae',
+  'frog_hood',
 ] as const
 
 describe('hair-style bundles', () => {
-  it('registers all 16 styles', () => {
+  it('registers all 17 styles', () => {
     expect(hairStyles.names().sort()).toEqual([...NAMES].sort())
   })
 

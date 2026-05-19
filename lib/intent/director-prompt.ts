@@ -34,11 +34,59 @@ Required fields:
   - torso (REQUIRED)
   - arms (REQUIRED)
   - legs (REQUIRED)
-  - jacket (optional outer coat/robe)
-  - sleeves (optional outer sleeves)
-  - pants_outer (optional outer pants)
-  - accessories (optional, e.g. "small star on left chest")
+  - jacket (RECOMMENDED — see Outer Layers below)
+  - sleeves (RECOMMENDED — see Outer Layers below)
+  - pants_outer (OPTIONAL but encouraged for added depth)
+  - accessories (RECOMMENDED — see Outer Layers below)
 - refinement_history: []
+
+## OUTER LAYERS — THIS IS WHAT MAKES SKINS LOOK GOOD
+
+I analyzed 30 popular real Minecraft skins from namemc.com. Stats:
+  - hat_front (hair volume / accessories):  100% of skins use it
+  - jacket_front (over-shirt / hoodie):      63% of skins use it
+  - pants_outer (over-pants / baggy):        43% of skins use it
+  - sleeves (over-sleeves / stripes):        30% of skins use it
+
+Without outer layers a character looks like a flat boxy figure. WITH outer
+layers, characters have flowing hair past the head, hoodie strings, jacket
+stripes, baggy sleeves, layered armor — the things that make a skin feel
+"designed".
+
+Default behavior: ALWAYS write a "jacket" descriptor unless the character
+is genuinely shirtless (swimwear, bare-chested barbarian). Even simple
+outfits like "blue hoodie" need a jacket descriptor describing the hoodie
+shape, drawstring, pocket placement.
+
+Examples of GOOD outfit objects:
+
+  Knight in plate armor:
+    torso: "polished silver chestplate base"
+    arms: "matching silver pauldrons"
+    legs: "silver greaves"
+    jacket: "red surcoat over the armor with gold heraldic cross on chest"
+    sleeves: "red surcoat sleeves with gold trim at cuffs"
+    accessories: "small lion crest pin near collar"
+
+  Cyberpunk hacker:
+    torso: "black undershirt"
+    arms: "black sleeves"
+    legs: "dark cargo pants"
+    jacket: "open black techwear jacket with neon cyan piping down the front zipper"
+    sleeves: "matching jacket sleeves with cyan stripes from shoulder to cuff"
+    pants_outer: "loose cargo overpants with magenta knee accents"
+
+  Streetwear kid:
+    torso: "white tee"
+    arms: "skin (bare arms)"
+    legs: "blue jeans"
+    jacket: "oversized black hoodie with white drawstring and chest pocket"
+    sleeves: "hoodie sleeves with two parallel white stripes (Adidas style)"
+    accessories: "small logo on left chest"
+
+Notice: the "torso" and "arms" describe what's UNDER the jacket — usually
+a simple base layer. The "jacket" describes the visible outer garment.
+The jacket renders ON TOP of the torso, so users mostly see the jacket.
 
 ## FACE — VERY IMPORTANT
 

@@ -151,6 +151,16 @@ function blitRegion(buf: Buffer, region: Region, src: Buffer) {
   }
 }
 
+/** Fill an entire region with a solid color (no transparency). Used as the
+ *  inner-layer safety net so the body cuboid is never transparent. */
+function fillRegion(buf: Buffer, region: Region, rgb: RGB) {
+  for (let row = 0; row < region.h; row++) {
+    for (let col = 0; col < region.w; col++) {
+      writePixel(buf, region.x + col, region.y + row, rgb)
+    }
+  }
+}
+
 function paintHexGrid(
   buf: Buffer,
   region: Region,
@@ -242,7 +252,22 @@ export async function buildSkinPngV2(intent: SkinIntent, pixels: SkinPixels): Pr
   if (earOut.head_right_cutout) blitRegion(buf, R.head_right!, earOut.head_right_cutout)
   if (earOut.head_left_cutout) blitRegion(buf, R.head_left!, earOut.head_left_cutout)
 
-  // 4. Body regions with palette snap + L/R mirror
+  // 4. Body regions with palette snap + L/R mirror.
+  //    Each inner region gets a SAFETY FILL of skin_tone first so it's never
+  //    transparent even if the Artist returned empty/missing pixels. The
+  //    Artist's pixels then paint over the fill where present.
+  const skinRgb = parseHex(intent.character.skin_tone) ?? [196, 149, 106]
+  fillRegion(buf, R.torso_front!, skinRgb)
+  fillRegion(buf, R.torso_back!, skinRgb)
+  fillRegion(buf, R.torso_right!, skinRgb)
+  fillRegion(buf, R.torso_left!, skinRgb)
+  for (const armRegion of ['right_arm_front', 'right_arm_back', 'right_arm_right', 'right_arm_left', 'left_arm_front', 'left_arm_back', 'left_arm_right', 'left_arm_left'] as const) {
+    fillRegion(buf, R[armRegion]!, skinRgb)
+  }
+  for (const legRegion of ['right_leg_front', 'right_leg_back', 'right_leg_right', 'right_leg_left', 'left_leg_front', 'left_leg_back', 'left_leg_right', 'left_leg_left'] as const) {
+    fillRegion(buf, R[legRegion]!, skinRgb)
+  }
+
   paintHexGrid(buf, R.torso_front!, pixels.torso_front, palette, threshold)
   paintHexGrid(buf, R.torso_back!, pixels.torso_back, palette, threshold)
   paintHexGrid(buf, R.torso_right!, pixels.torso_side, palette, threshold)

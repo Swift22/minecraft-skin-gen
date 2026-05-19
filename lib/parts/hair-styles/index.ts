@@ -11,6 +11,10 @@ import { ponytail } from './ponytail'
 import { spiky } from './spiky'
 import { undercut } from './undercut'
 import { dreads } from './dreads'
+import { long_flowing } from './long_flowing'
+import { twin_tails } from './twin_tails'
+import { horned } from './horned'
+import { antennae } from './antennae'
 
 export const hairStyles = createRegistry({
   classic,
@@ -25,5 +29,9 @@ export const hairStyles = createRegistry({
   spiky,
   undercut,
   dreads,
+  long_flowing,
+  twin_tails,
+  horned,
+  antennae,
 })
 export type HairStyle = ReturnType<typeof hairStyles.names>[number]

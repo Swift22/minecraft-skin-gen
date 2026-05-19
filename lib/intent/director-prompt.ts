@@ -23,7 +23,7 @@ Required fields:
   - mouth_color: hex
   - nose: none | bridge | dot | wide
   - nose_shadow: hex (slightly darker than skin_tone)
-  - hair_style: classic | bangs | side_part | mohawk | fluffy | curtain | bald | bun | ponytail | spiky | undercut | dreads
+  - hair_style: classic | bangs | side_part | mohawk | fluffy | curtain | bald | bun | ponytail | spiky | undercut | dreads | long_flowing | twin_tails | horned | antennae
   - hair_length: short | medium | long | very_long
   - hair_color: hex
   - hair_accent_color: hex (lighter or contrasting streak/tip)
@@ -146,5 +146,27 @@ Avoid "none" / "dot" combinations that produce blank faces.
 - Choose parametric character values that match the prompt's vibe.
 - The character's facial expression should match the prompt's energy
   (frown for a villain, wide_smile for a friendly kid, smirk for cyberpunk, etc.).
+
+## CUTE / KAWAII / ANIME / PASTEL prompts — special handling
+
+If the prompt mentions "cute", "kawaii", "anime", "chibi", "soft",
+"pastel", "frog", "bunny", "girly", or describes the character as
+small / friendly / sweet:
+- face_template: prefer anime_big_eyes, feminine_round, round_face_smile,
+  chubby_kid, dot_eyes.
+- skin_tone: lighter / paler shades like #F5D6B8, #FDE0C8, or pinkish
+  #F5D0D0 work well for the soft vibe. NEVER muddy or grey.
+- palette: pastel hues — pink #F4C2C2, mint #B6E5C3, lavender #C8AFE0,
+  baby blue #B4D7E5, cream #FAF5F2, soft yellow #FFF1A8. 3-5 colors.
+- hair_style: bun, ponytail, fluffy, long_front_hair, bangs (the kinds
+  with more hair-volume).
+- outfit: MUST describe puffy/billowing details. e.g.
+    jacket: "soft pink hoodie with puffy collar and white drawstrings"
+    sleeves: "puffy white sleeves with frilled ribbon cuff"
+    pants_outer: "pleated skirt with white horizontal lace ribbons"
+    accessories: "small pink heart emblem on chest" / "tiny ribbon bow at the side"
+- The hair flowing past the head (visible from front) is essential
+  to the cute look — describe long hair / bangs / side tufts in the
+  hair_style choice + matching outfit descriptors.
 
 Output ONLY valid JSON matching the schema. No prose, no markdown fences.`

@@ -126,6 +126,62 @@ Dark metallic leg armor that becomes a boot with a light highlight at the toe:
   ["#0F0F0F","#BEBEBE","#BEBEBE","#B1B1B1"]
 ]
 
+### Exemplar E — Puffy white sleeve_front (from a real cute white-dress reference)
+A frilly puff-sleeve cuff: most of the sleeve is transparent (the inner
+skin shows through), but rows 5-10 have a frilly white cuff with a darker
+cuff edge at row 10. This is how real cute skins create "puffy sleeves":
+[
+  ["","","",""],
+  ["","","",""],
+  ["","","",""],
+  ["","","",""],
+  ["","","",""],
+  ["#FAF5F2","#FAF5F2","",""],
+  ["","","",""],
+  ["#FAF5F2","#FAF5F2","",""],
+  ["#FAF5F2","#FAF5F2","",""],
+  ["#FAF5F2","#FAF5F2","",""],
+  ["#E4E4EC","#EAEAF0","",""],
+  ["","","",""]
+]
+
+### Exemplar F — Cute jacket_front (puffy frilled blouse with shoulder volume)
+Most of the chest center is transparent (showing the inner top through
+the open-front frilled jacket). Detail concentrated at the shoulders and
+collar — that's where the "puffy" comes from:
+[
+  ["","","","","","","",""],
+  ["","#D8ADAE","","","","","#D8ADAE",""],
+  ["","#DFB5AC","","","","","#DFB5AC",""],
+  ["#D8ADAE","#E8BEB2","","","","","#E8BEB2","#D8ADAE"],
+  ["#D8ADAE","#E8BEB2","#D8ADAE","","","#D8ADAE","#E8BEB2","#D8ADAE"],
+  ["","#E8BEB2","#D8ADAE","","","#D8ADAE","#E8BEB2",""],
+  ["","#E8BEB2","#DFB5AC","","","#DFB5AC","#E8BEB2",""],
+  ["","#DFB5AC","","","","","#DFB5AC",""],
+  ["#D8ADAE","","","","","","","#D8ADAE"],
+  ["#D8ADAE","","","","","","","#D8ADAE"],
+  ["","#D8ADAE","","","","","#D8ADAE",""],
+  ["","","","","","","","#F4F5FA"]
+]
+
+### Exemplar G — hat_back for FLOWING HAIR effect (essential for cute / long-hair skins)
+The hat_back is HEAVILY painted with vertical stripes of hair color
+extending all the way down — that's what makes hair appear to flow past
+the head in 3D. EVERY OTHER COLUMN filled:
+[
+  ["#FAF5F2","","#FAF5F2","","","#FAF5F2","","#FAF5F2"],
+  ["#FAF5F2","","#FAF5F2","","","#FAF5F2","","#FAF5F2"],
+  ["#FAF5F2","","#FAF5F2","","","#FAF5F2","","#FAF5F2"],
+  ["#FAF5F2","","#FAF5F2","#F0C3B2","","#FAF5F2","","#FAF5F2"],
+  ["#FAF5F2","","#FAF5F2","#F0C3B2","","#FAF5F2","","#FAF5F2"],
+  ["#FAF5F2","","#FAF5F2","#F0C3B2","","#FAF5F2","","#FAF5F2"],
+  ["","#FAF5F2","","","","","#FAF5F2",""],
+  ["","","","","","","",""]
+]
+NOTE: hat_back isn't an Artist-controlled region (it comes from
+hair_style). Mentioning here so Artist understands the OUTER LAYER
+HAT FRONT can have similar bang/tuft patterns extending past the face.
+
 ### Exemplar D — Torso base under a jacket (simple black, small chest emblem)
 The torso is mostly hidden under the jacket. Just a black base + a small
 colored emblem (3-4 pixel sigil/badge centered on the chest, rows 4-6):

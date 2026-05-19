@@ -14,10 +14,14 @@ const NAMES = [
   'spiky',
   'undercut',
   'dreads',
+  'long_flowing',
+  'twin_tails',
+  'horned',
+  'antennae',
 ] as const
 
 describe('hair-style bundles', () => {
-  it('registers all 12 styles', () => {
+  it('registers all 16 styles', () => {
     expect(hairStyles.names().sort()).toEqual([...NAMES].sort())
   })
 

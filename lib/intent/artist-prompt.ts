@@ -30,21 +30,25 @@ Region dimensions (rows × cols):
 
 ### How real Minecraft skin artists structure layers
 
-INNER LAYER (torso, arms, legs): the underlying body — often a SIMPLE
-base color that's mostly hidden by the jacket on top. Don't waste detail
-here. Usually:
-  - 1-3 colors max
-  - Solid fill or subtle 2-row shading (top lighter, bottom darker)
-  - Sometimes a small detail at the bottom (waistband, shoe top)
+EVERY region should have RICH SHADING (4-6 shades of the base color +
+accent details). The corpus average is 14 unique colors on torso_front,
+not 1-3. Flat single-color regions look unfinished.
 
-OUTER LAYER (jacket, sleeves, pants_outer): THIS is where the design
-lives. It renders on TOP of the inner layer in 3D. Real skins use 8-15
-unique colors on these regions with rich multi-shade gradients.
+INNER LAYER (torso, arms, legs): the body itself.
+  - Fully opaque (NEVER use "" — these are the underlying skin)
+  - Rich shading with 4-8 colors: base + lighter row 0 + darker row 11 +
+    structural details (collar, waistband, shoe top)
+  - If a jacket will cover most of this, still paint it richly — when
+    the jacket has transparent V-neck/sleeves the inner shows through
 
-Outer-layer pixels can be transparent ("") — and SHOULD be in some
-places, to let the inner skin show through naturally (e.g. open V-neck,
-torn-jacket holes, bare-belly croptop, exposed arm between sleeve cuff
-and glove).
+OUTER LAYER (jacket, sleeves, pants_outer): the visible over-garment.
+  - Renders on TOP of the inner layer in 3D
+  - Use 8-15 unique colors with multi-shade gradients (see exemplars)
+  - INTENTIONAL transparency is allowed for natural shaping: V-neck,
+    open jacket front, bare arms between sleeve cuff and glove.
+  - But where pixels ARE painted, they must be detailed and shaded.
+    A fully-painted outer region with only one flat color is wrong —
+    that's no better than the inner layer alone.
 
 ### Shading patterns from the corpus
 
@@ -160,19 +164,16 @@ ${ctx}`
 export const ARTIST_SYSTEM_INSTRUCTION = `You are a Minecraft skin pixel artist. You draw pixel grids for body regions of a 64×64 player skin.
 
 Style guidance (analyzed from 88 popular real namemc skins):
-- LAYER HIERARCHY: inner torso/arms/legs are the underlying body (1-3 colors,
-  fully opaque, mostly hidden by jacket). OUTER layers (jacket/sleeves/pants)
-  carry the visible design (8-15 colors, rich shading, some transparency for
-  natural shaping like V-necks).
-- RICH SHADING: derive 4-6 shades of each base color (lerp toward white for
-  highlights, toward #1A1A1A for shadows). Real skins use 6-15 colors per
-  outer-layer region — not a flat single color.
+- RICH SHADING IN EVERY REGION: 4-6 shades of each base color (lerp toward
+  white for highlights, toward #1A1A1A for shadows). The corpus average is
+  14 unique colors on torso_front. A flat single-color region looks unfinished.
 - STRUCTURED VARIATION: every off-base pixel traces a real garment feature
-  (fold, seam, pocket, button, stripe, drawstring, zipper, armor segment).
-  Never scatter pixels randomly.
-- OUTER LAYERS USE TRANSPARENCY: "" pixels in outer regions reveal the
-  inner skin — useful for open neckline, exposed arms, etc. The provided
-  exemplars show typical transparency patterns.
+  (fold, seam, pocket, button, stripe, drawstring, zipper, armor segment,
+  emblem, trim, belt). Never scatter pixels randomly.
+- INNER vs OUTER: inner torso/arms/legs are fully opaque (NEVER use "").
+  Outer jacket/sleeves/pants MAY use "" for natural shaping (V-neck, open
+  jacket, exposed arm between cuff and glove). But where the outer layer
+  IS painted, it must be richly shaded — not flat.
 - Use #1A1A1A and #F0F0F0 instead of #000000 / #FFFFFF.
 
 Output ONLY valid JSON. No prose, no markdown fences.`

@@ -43,10 +43,13 @@ INNER LAYER (torso, arms, legs): the body itself.
 
 OUTER LAYER (jacket, sleeves, pants_outer): the visible over-garment.
   - Renders on TOP of the inner layer in 3D
-  - **TARGET FILL DENSITY: 30-40% of the region.** Real cute-vibe jackets
-    have ~30 filled pixels out of 96 cells. The rest is transparent so
-    the inner shirt / skin shows through naturally. A 95%-filled outer
-    layer reads as a single boxy garment instead of a layered outfit.
+  - **TARGET FILL DENSITY: 15-25% of the region.** Verified from 88-skin
+    namemc corpus: real jacket_front averages 20% filled, sleeve 17%,
+    pants_outer 8-21%. A 50%+ filled outer layer reads as a boxy
+    one-piece costume instead of a layered outfit.
+  - In a 12x8 jacket_front (96 cells), aim for 15-25 filled pixels —
+    concentrated at cols 0+7 (silhouette), top rows (collar/shoulder),
+    and 1-2 small decoration clusters. The rest is transparent.
   - **TIGHT COLOR FAMILY: 4-6 shades of ONE hue family per region.**
     Pick a base color, derive lighter + darker shades, that's the whole
     palette for that region. Do not mix colors from across the full

@@ -6,10 +6,10 @@ const OUT_DIR = '/tmp/skin-3d'
 await mkdir(OUT_DIR, { recursive: true })
 
 const SKINS = [
-  { file: 'v10-1-pink-girl.png',    url: '/local-skins/f1afc331-dc81-42f4-ac10-099fd51579ef.png' },
-  { file: 'v10-2-frog.png',         url: '/local-skins/b4dd3ee7-b8d9-4cbf-9a3c-915dd2dc4e36.png' },
-  { file: 'v10-3-twin-tails.png',   url: '/local-skins/d3f087ea-793e-444d-b95b-5132dc870ae3.png' },
-  { file: 'v10-4-goth.png',         url: '/local-skins/eba0a3b1-d62b-4225-83ce-24a3979239a7.png' },
+  { file: 'v11-1-pink-girl.png',    url: '/local-skins/ab79f043-96d6-4a4b-bc31-6db3ce92913e.png' },
+  { file: 'v11-2-frog.png',         url: '/local-skins/c3892ab0-0469-4c2d-bc2a-ddd43867d849.png' },
+  { file: 'v11-3-twin-tails.png',   url: '/local-skins/1398e6cc-42aa-4307-8a57-349b26dae0e7.png' },
+  { file: 'v11-4-goth.png',         url: '/local-skins/25f8be08-e2cd-4765-93c9-e0e2c40ed8e1.png' },
 ]
 
 const browser = await chromium.launch()

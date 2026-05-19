@@ -15,10 +15,34 @@ import { writeFile, mkdir } from 'node:fs/promises'
 import path from 'node:path'
 
 const OUT_DIR = path.join(import.meta.dirname, 'namemc-skins')
-const TARGET_COUNT = parseInt(process.env.TARGET ?? '60', 10)
-const DELAY_MS = 600
+const TARGET_COUNT = parseInt(process.env.TARGET ?? '150', 10)
+const DELAY_MS = 400
 
 await mkdir(OUT_DIR, { recursive: true })
+
+// Multiple gallery URLs to maximize variety. namemc uses category paths,
+// not numeric pagination — these are the actually-valid URLs found via DOM inspection.
+const GALLERY_URLS = [
+  'https://namemc.com/minecraft-skins',
+  'https://namemc.com/minecraft-skins/trending/daily',
+  'https://namemc.com/minecraft-skins/trending/weekly',
+  'https://namemc.com/minecraft-skins/trending/monthly',
+  'https://namemc.com/minecraft-skins/trending/top',
+  'https://namemc.com/minecraft-skins/new',
+  // random gives a different set each visit
+  'https://namemc.com/minecraft-skins/random',
+  'https://namemc.com/minecraft-skins/random',
+  'https://namemc.com/minecraft-skins/random',
+  // tag-based for variety in style
+  'https://namemc.com/minecraft-skins/tag/hoodie',
+  'https://namemc.com/minecraft-skins/tag/suit',
+  'https://namemc.com/minecraft-skins/tag/anime',
+  'https://namemc.com/minecraft-skins/tag/mask',
+  'https://namemc.com/minecraft-skins/tag/cute',
+  'https://namemc.com/minecraft-skins/tag/dark',
+  'https://namemc.com/minecraft-skins/tag/steve',
+  'https://namemc.com/minecraft-skins/tag/cat',
+]
 
 const browser = await chromium.launch({ headless: true })
 const ctx = await browser.newContext({
@@ -27,39 +51,37 @@ const ctx = await browser.newContext({
 })
 const page = await ctx.newPage()
 
-console.log('-> opening namemc skin gallery')
-await page.goto('https://namemc.com/minecraft-skins', { waitUntil: 'domcontentloaded', timeout: 60000 })
-
-// Wait through any Cloudflare challenge (up to 30s for the skin grid to appear)
-console.log('-> waiting for skin grid...')
-try {
-  await page.waitForSelector('canvas.skin-2d, a[href^="/skin/"], img[src*="/texture/"]', { timeout: 30000 })
-} catch {
-  // Maybe still on challenge page; dump for debugging
-  const title = await page.title()
-  console.log(`page title after wait: ${title}`)
+// Collect unique skin hrefs across all gallery URLs
+const seen = new Set()
+for (const url of GALLERY_URLS) {
+  if (seen.size >= TARGET_COUNT) break
+  console.log(`-> opening ${url}`)
+  try {
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 })
+    await page.waitForSelector('a[href^="/skin/"]', { timeout: 20000 }).catch(() => null)
+    for (let i = 0; i < 4; i++) {
+      await page.evaluate(() => window.scrollBy(0, window.innerHeight))
+      await page.waitForTimeout(500)
+    }
+    const hrefs = await page.evaluate(() => Array.from(document.querySelectorAll('a[href^="/skin/"]')).map((a) => a.getAttribute('href')))
+    let added = 0
+    for (const h of hrefs) {
+      if (!seen.has(h)) {
+        seen.add(h)
+        added++
+      }
+    }
+    console.log(`   +${added} new (total ${seen.size})`)
+  } catch (err) {
+    console.log(`   error: ${err.message}`)
+  }
 }
 
-// Scroll a few times to lazy-load more skins
-for (let i = 0; i < 6; i++) {
-  await page.evaluate(() => window.scrollBy(0, window.innerHeight))
-  await page.waitForTimeout(800)
-}
-
-// Extract skin detail-page hrefs
-const skinHrefs = await page.evaluate(() => {
-  const anchors = Array.from(document.querySelectorAll('a[href^="/skin/"]'))
-  const hrefs = new Set()
-  for (const a of anchors) hrefs.add(a.getAttribute('href'))
-  return Array.from(hrefs)
-})
-console.log(`-> found ${skinHrefs.length} skin links on listing`)
+const skinHrefs = Array.from(seen)
+console.log(`\n-> ${skinHrefs.length} unique skin links collected total`)
 
 if (skinHrefs.length === 0) {
   console.log('!! no skin links — Cloudflare may still be challenging us')
-  const html = await page.content()
-  await writeFile('/tmp/namemc-debug.html', html)
-  console.log('saved page to /tmp/namemc-debug.html for inspection')
   await browser.close()
   process.exit(2)
 }
@@ -70,6 +92,9 @@ const targets = skinHrefs.slice(0, TARGET_COUNT)
 for (let i = 0; i < targets.length; i++) {
   const href = targets[i]
   const url = `https://namemc.com${href}`
+  // Skip if we already have this skin (idempotent re-runs)
+  const hashMatch = href.match(/\/skin\/([0-9a-f]+)/)
+  const expectedHash = hashMatch ? hashMatch[1] : null
   try {
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 })
     // Wait for the download anchor that JS adds after render
@@ -92,11 +117,13 @@ for (let i = 0; i < targets.length; i++) {
       continue
     }
     const buf = await resp.body()
-    const out = path.join(OUT_DIR, `${String(i+1).padStart(3,'0')}.png`)
+    // Name by hash so re-runs don't duplicate
+    const filename = expectedHash ? `${expectedHash}.png` : `${String(i+1).padStart(4,'0')}.png`
+    const out = path.join(OUT_DIR, filename)
     await writeFile(out, buf)
     saved++
-    if (saved % 5 === 0 || i === targets.length - 1) {
-      console.log(`  [${i+1}/${targets.length}] saved ${out} (${buf.length} bytes)`)
+    if (saved % 10 === 0 || i === targets.length - 1) {
+      console.log(`  [${i+1}/${targets.length}] saved ${filename} (${buf.length} bytes)`)
     }
   } catch (err) {
     console.log(`  [${i+1}/${targets.length}] error: ${err.message}`)

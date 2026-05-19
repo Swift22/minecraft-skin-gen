@@ -26,147 +26,153 @@ Region dimensions (rows × cols):
   jacket_front/back: 12×8  jacket_side: 12×4
   sleeve_front: 12×4      pants_outer_front: 12×4
 
-Layout (rows are 0-indexed top-to-bottom):
-  Torso: rows 0-1 collar/shoulder, 2-7 body, 8-9 belt, 10-11 lower garment
-  Arm:   row 0 shoulder cap, 1-9 main, 10-11 cuff
-  Leg:   rows 0-7 pants, 8-11 boots
+## STYLE — analyzed from 88 popular real namemc skins
 
-## STYLE — based on analysis of 30 popular real Minecraft skins
+### How real Minecraft skin artists structure layers
 
-Good Minecraft skin regions typically use 5-10 unique colors with rich
-shading — NOT 1-2 flat colors. The shading goes BEYOND simple top-row /
-bottom-row banding. Real artists put highlights and shadows wherever
-implied light dictates (collar fold, armor seam, fabric crease, belt
-shadow, pocket edge, etc.).
+INNER LAYER (torso, arms, legs): the underlying body — often a SIMPLE
+base color that's mostly hidden by the jacket on top. Don't waste detail
+here. Usually:
+  - 1-3 colors max
+  - Solid fill or subtle 2-row shading (top lighter, bottom darker)
+  - Sometimes a small detail at the bottom (waistband, shoe top)
 
-DO:
-- Use multiple shades of the base color: 1 base + 1-2 lighter highlights +
-  1-2 darker shadows. ~4-5 shades of the SAME color family per region is normal.
-- Add structural details: collar at rows 0-1, belt at rows 8-9, pocket
-  outlines, button placement, zipper down the center, shoulder seams.
-- Place highlights where light catches: top of the shoulder, raised armor
-  ridges, the tops of folds. Place shadows where light doesn't reach: under
-  the collar, under the belt, sides of folds, pocket interiors.
-- The corpus average is 14 unique colors on torso_front — feel free to
-  use that much variety.
-- Use the FULL palette and derive shades by lerping toward white/black.
+OUTER LAYER (jacket, sleeves, pants_outer): THIS is where the design
+lives. It renders on TOP of the inner layer in 3D. Real skins use 8-15
+unique colors on these regions with rich multi-shade gradients.
 
-DO NOT:
-- Place SINGLE off-color pixels with no purpose — variation must trace
-  some structure (a fold edge, a button, a seam, NOT noise).
-- Flood-fill the whole region with one solid color. That looks unfinished.
-- Dither random color toggles for "texture" — variation must be intentional
-  shape, not chaos.
+Outer-layer pixels can be transparent ("") — and SHOULD be in some
+places, to let the inner skin show through naturally (e.g. open V-neck,
+torn-jacket holes, bare-belly croptop, exposed arm between sleeve cuff
+and glove).
 
-## OUTER LAYERS — DO NOT SKIP THESE
+### Shading patterns from the corpus
 
-The corpus shows hat_front used 100%, jacket_front 63%, pants_outer 43%,
-sleeves 30% of skins. They are NOT decorative add-ons — they are how
-skins look detailed and 3D. Examples of what each carries:
+Real artists use 4-6 SHADES of the same hue per region for proper 3D
+depth — not a single flat color. Examples of shade families in real skins:
 
-- jacket_front/back/side: the visible OUTER garment (hoodie, coat, robe,
-  armor surcoat). Renders ON TOP of torso. This is usually the dominant
-  visible color on the chest. Use ALL 12 rows. Add details like:
-    rows 0-1: collar / hood opening
-    rows 2-4: chest with logo / pocket / zipper
-    rows 5-7: midsection
-    rows 8-9: hem / belt under the jacket
-    rows 10-11: jacket bottom edge (often with a stripe)
-- sleeve_front: outer sleeve fabric — usually a stripe pattern down the
-  side (Adidas-style), or hoodie sleeve with cuff at rows 10-11. Use
-  transparent ("") sparingly — usually fully painted.
-- pants_outer_front: overpants, baggy pants, or armor leg plates. Knee
-  pocket / patch around rows 4-6 is a common detail. Boot top at row 8.
+  Dark gray (hoodie / tech jacket):
+    #0F0F0F (deepest shadow) → #171717 → #1A1A1A → #1F1F1F → #242424
+    → #292929 → #2E2E2E → #353535 → #3E3745 (highlight)
+  Beige (robe / cloak):
+    #B59F8F → #D0B7A4 → #E7CCB6 → #F3D6C0 → #FDE0C8 → #FAFAFB
+  Gold / yellow (cuff / armor accent):
+    #F1AF20 → #F3C93C → #FCBC53 → #F2B75B → #FFC560 → #FFCA6F → #FFCF7D
+  Blue (jacket / armor):
+    #496488 → #5989A6 → #6DA0B0
 
-If a layer descriptor is present in the outfit, PAINT IT. Do not skip
-the region — that's the difference between a flat figure and a detailed
-character.
+Use the OUTFIT palette colors as your bases and derive 3-5 shades of
+each (lerp toward white for highlights, toward #1A1A1A for shadows).
+
+## REAL EXEMPLAR PIXEL GRIDS (extracted from namemc top skins)
+
+### Exemplar A — Hoodie jacket_front (13 colors, drawstring + pocket)
+This is a complete jacket_front from a popular grey hoodie skin. Notice:
+- Multiple dark gray shades for depth (#27242E, #2E2B36, #35333D, #382E3C, #3E3745, #463B4A, #54525C)
+- WHITE drawstring pixels in row 2 + 7 (the strings hanging down)
+- Pocket area in rows 7-9 (slightly different shade)
+- Transparent "" pixels at the V-neck and shoulder edges
+[
+  ["","#736A71","#7E6C76","","","#7E6C76","#736A71",""],
+  ["","#382E3C","#27242E","","","#27242E","#382E3C",""],
+  ["","#382E3C","","#FCF6E6","","","#382E3C",""],
+  ["","","#27242E","","","#27242E","",""],
+  ["#D6C8C7","","","#35333D","#D6C8C7","","","#D6C8C7"],
+  ["","#D6C8C7","","","","","#D6C8C7",""],
+  ["","","","","","","",""],
+  ["","","#54525C","#DED4D3","#54525C","#54525C","",""],
+  ["","","","","#2E2B36","#27232E","",""],
+  ["","#35333D","","#35333D","","","#3E3745",""],
+  ["","#35333D","#35333D","","#3E3745","#463B4A","#35333D",""],
+  ["","#35333D","","#35333D","#35333D","","#35333D",""]
+]
+
+### Exemplar B — Golden sleeve_front (6 shades of yellow with gradient)
+A tapered golden sleeve, shoulder cap at row 2-3, full sleeve in the middle,
+cuff fade at bottom:
+[
+  ["","","",""],
+  ["","","",""],
+  ["#FCBC53","","",""],
+  ["#FFC560","#FCBC53","#F3BC62","#FFC560"],
+  ["#FFCA6F","#FFC560","#FFC560","#FFC560"],
+  ["#FFC560","#FFCF7D","#FFC560","#FFC560"],
+  ["#FFC560","#FFC560","#FFC560","#FFC560"],
+  ["#FFC560","#FFC560","#FFC560","#FFC560"],
+  ["#FFC560","#FFC560","#FFC560","#FFC560"],
+  ["#FCBC53","#FCBC53","#F3BC62","#F2B75B"],
+  ["","","",""],
+  ["","","",""]
+]
+
+### Exemplar C — Dark armor pants_outer_front (8 shades with metallic highlights)
+Dark metallic leg armor that becomes a boot with a light highlight at the toe:
+[
+  ["","","",""],
+  ["","#1F1F1F","",""],
+  ["","#242424","#1F1F1F",""],
+  ["#242424","#292929","#242424",""],
+  ["#292929","#2E2E2E","",""],
+  ["","#2E2E2E","",""],
+  ["","","#242424",""],
+  ["#1F1F1F","#242424","#1F1F1F",""],
+  ["#171717","#1F1F1F","",""],
+  ["#171717","#1F1F1F","#171717",""],
+  ["#0F0F0F","#171717","#0F0F0F",""],
+  ["#0F0F0F","#BEBEBE","#BEBEBE","#B1B1B1"]
+]
+
+### Exemplar D — Torso base under a jacket (simple black, small chest emblem)
+The torso is mostly hidden under the jacket. Just a black base + a small
+colored emblem (3-4 pixel sigil/badge centered on the chest, rows 4-6):
+[
+  ["#1A1A1A","#1A1A1A","#1A1A1A","#F0F0F0","#F0F0F0","#1A1A1A","#1A1A1A","#1A1A1A"],
+  ["#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A"],
+  ["#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A"],
+  ["#1A1A1A","#1A1A1A","#1A1A1A","#CC2829","#CC2829","#1A1A1A","#1A1A1A","#1A1A1A"],
+  ["#1A1A1A","#305E39","#305E39","#CC2829","#313F61","#313F61","#313F61","#1A1A1A"],
+  ["#1A1A1A","#1A1A1A","#305E39","#DBB433","#DBB433","#313F61","#1A1A1A","#1A1A1A"],
+  ["#1A1A1A","#1A1A1A","#DBB433","#1A1A1A","#1A1A1A","#DBB433","#1A1A1A","#1A1A1A"],
+  ["#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A"],
+  ["#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A"],
+  ["#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A"],
+  ["#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A"],
+  ["#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A"]
+]
 
 ## SYMMETRY
 
 Paint ONE side of each L/R pair only: torso_side, arm_front, arm_side,
-arm_back, leg_front, leg_side, leg_back. Same for jacket_side, sleeve_front,
-pants_outer_front. The system mirrors them to the left side automatically.
-Do NOT include left_* keys.
-
-## EXAMPLE — modern kid in dark hoodie with white sleeve stripes + blue jeans
-
-torso_front (white tee under hoodie, mostly hidden — keep simple):
-[
-  ["#F0F0F0","#F0F0F0","#F0F0F0","#F0F0F0","#F0F0F0","#F0F0F0","#F0F0F0","#F0F0F0"],
-  ["#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5"],
-  ["#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5"],
-  ["#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5"],
-  ["#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5"],
-  ["#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5"],
-  ["#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5"],
-  ["#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5","#E5E5E5"],
-  ["#5A4A30","#5A4A30","#5A4A30","#5A4A30","#5A4A30","#5A4A30","#5A4A30","#5A4A30"],
-  ["#5A4A30","#5A4A30","#5A4A30","#5A4A30","#5A4A30","#5A4A30","#5A4A30","#5A4A30"],
-  ["#2D5F8F","#2D5F8F","#2D5F8F","#2D5F8F","#2D5F8F","#2D5F8F","#2D5F8F","#2D5F8F"],
-  ["#2D5F8F","#2D5F8F","#2D5F8F","#2D5F8F","#2D5F8F","#2D5F8F","#2D5F8F","#2D5F8F"]
-]
-
-jacket_front (this is what users actually SEE on the chest — black hoodie
-with white drawstring, raised hood, chest pocket, drawstring loop):
-[
-  ["#2A2A2A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#2A2A2A"],
-  ["#2A2A2A","#1A1A1A","#3A3A3A","#3A3A3A","#3A3A3A","#3A3A3A","#1A1A1A","#2A2A2A"],
-  ["#1A1A1A","#1A1A1A","#1A1A1A","#F0F0F0","#F0F0F0","#1A1A1A","#1A1A1A","#1A1A1A"],
-  ["#1A1A1A","#1A1A1A","#1A1A1A","#F0F0F0","#F0F0F0","#1A1A1A","#1A1A1A","#1A1A1A"],
-  ["#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A"],
-  ["#1A1A1A","#0F0F0F","#0F0F0F","#0F0F0F","#0F0F0F","#0F0F0F","#0F0F0F","#1A1A1A"],
-  ["#1A1A1A","#0F0F0F","#0F0F0F","#0F0F0F","#0F0F0F","#0F0F0F","#0F0F0F","#1A1A1A"],
-  ["#1A1A1A","#0F0F0F","#0F0F0F","#0F0F0F","#0F0F0F","#0F0F0F","#0F0F0F","#1A1A1A"],
-  ["#1A1A1A","#0F0F0F","#0F0F0F","#0F0F0F","#0F0F0F","#0F0F0F","#0F0F0F","#1A1A1A"],
-  ["#1A1A1A","#0F0F0F","#0F0F0F","#0F0F0F","#0F0F0F","#0F0F0F","#0F0F0F","#1A1A1A"],
-  ["#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A"],
-  ["#0A0A0A","#0A0A0A","#0A0A0A","#0A0A0A","#0A0A0A","#0A0A0A","#0A0A0A","#0A0A0A"]
-]
-
-Note: 4 black shades (#0A0A0A darkest, #0F0F0F, #1A1A1A base, #2A2A2A, #3A3A3A
-lightest for collar), plus #F0F0F0 white drawstring. 6 colors total — that's
-the kind of richness real skins have.
-
-sleeve_front (jacket sleeve with two parallel white stripes down the side):
-[
-  ["#2A2A2A","#2A2A2A","#2A2A2A","#2A2A2A"],
-  ["#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A"],
-  ["#1A1A1A","#1A1A1A","#1A1A1A","#F0F0F0"],
-  ["#1A1A1A","#1A1A1A","#1A1A1A","#F0F0F0"],
-  ["#1A1A1A","#1A1A1A","#F0F0F0","#1A1A1A"],
-  ["#1A1A1A","#1A1A1A","#F0F0F0","#1A1A1A"],
-  ["#1A1A1A","#1A1A1A","#1A1A1A","#F0F0F0"],
-  ["#1A1A1A","#1A1A1A","#1A1A1A","#F0F0F0"],
-  ["#1A1A1A","#1A1A1A","#F0F0F0","#1A1A1A"],
-  ["#1A1A1A","#1A1A1A","#F0F0F0","#1A1A1A"],
-  ["#1A1A1A","#1A1A1A","#1A1A1A","#1A1A1A"],
-  ["#0A0A0A","#0A0A0A","#0A0A0A","#0A0A0A"]
-]
-
-Note the parallel stripes alternating columns — that's a structured
-design, not random pixels. Top row lighter shoulder, bottom row darker cuff.
+arm_back, leg_front, leg_side, leg_back. Same for jacket_side,
+sleeve_front, pants_outer_front. The system mirrors them to the left
+side automatically. Do NOT include left_* keys.
 
 ## OUTPUT
 
 ONE JSON object with one key per region listed above. Each value is a 2D
 array of hex color strings (row major). Use "" for transparent pixels —
-mostly only in outer layers where the inner skin should show through.
+in outer layers this is correct (lets inner show through). In inner
+layers (torso/arms/legs) DO NOT use "" — those must be fully opaque.
 
 ${ctx}`
 }
 
 export const ARTIST_SYSTEM_INSTRUCTION = `You are a Minecraft skin pixel artist. You draw pixel grids for body regions of a 64×64 player skin.
 
-Style guidance (analyzed from 30 popular real Minecraft skins):
-- RICH SHADING: 5-10 unique colors per region is normal. Multiple shades of
-  the base color + 1-2 accent colors for trim and details.
-- STRUCTURED VARIATION: every off-base pixel should trace a structural
-  detail (fold, seam, pocket, button, stripe, highlight, shadow). Never
-  scatter pixels randomly "for texture".
-- OUTER LAYERS ARE PRIMARY: jacket/sleeves/pants_outer regions render ON TOP
-  of the body. They carry the visible design. Always paint them fully when
-  the outfit descriptor mentions them — don't skip the region.
-- Always use #1A1A1A and #F0F0F0 instead of #000000 / #FFFFFF.
+Style guidance (analyzed from 88 popular real namemc skins):
+- LAYER HIERARCHY: inner torso/arms/legs are the underlying body (1-3 colors,
+  fully opaque, mostly hidden by jacket). OUTER layers (jacket/sleeves/pants)
+  carry the visible design (8-15 colors, rich shading, some transparency for
+  natural shaping like V-necks).
+- RICH SHADING: derive 4-6 shades of each base color (lerp toward white for
+  highlights, toward #1A1A1A for shadows). Real skins use 6-15 colors per
+  outer-layer region — not a flat single color.
+- STRUCTURED VARIATION: every off-base pixel traces a real garment feature
+  (fold, seam, pocket, button, stripe, drawstring, zipper, armor segment).
+  Never scatter pixels randomly.
+- OUTER LAYERS USE TRANSPARENCY: "" pixels in outer regions reveal the
+  inner skin — useful for open neckline, exposed arms, etc. The provided
+  exemplars show typical transparency patterns.
+- Use #1A1A1A and #F0F0F0 instead of #000000 / #FFFFFF.
 
 Output ONLY valid JSON. No prose, no markdown fences.`

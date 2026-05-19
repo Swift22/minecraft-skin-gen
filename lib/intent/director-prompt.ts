@@ -180,8 +180,12 @@ small / friendly / sweet:
   #F5D0D0 work well for the soft vibe. NEVER muddy or grey.
 - palette: pastel hues — pink #F4C2C2, mint #B6E5C3, lavender #C8AFE0,
   baby blue #B4D7E5, cream #FAF5F2, soft yellow #FFF1A8. 3-5 colors.
-- hair_style: bun, ponytail, fluffy, long_front_hair, bangs (the kinds
-  with more hair-volume).
+- hair_style: STRONGLY prefer long_flowing or twin_tails for cute prompts
+  — these aggressively use the hat layer (visible flowing hair past the
+  head silhouette). For asymmetric / goth / one-horn aesthetics, use horned.
+  For alien / cute creatures with antennae or ears use antennae.
+  Avoid plain "bangs" or "classic" for cute prompts — they don't fill the
+  hat layer enough to give the cute volume effect.
 - outfit: MUST describe puffy/billowing details. e.g.
     jacket: "soft pink hoodie with puffy collar and white drawstrings"
     sleeves: "puffy white sleeves with frilled ribbon cuff"

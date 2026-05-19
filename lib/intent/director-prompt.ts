@@ -13,7 +13,8 @@ Required fields:
       fluffy_hair | long_front_hair | round_face_smile | frown_serious | no_hair_bald |
       close_set_eyes | wide_spaced_eyes | nose_and_mouth | sleepy_halfopen | feminine_round |
       anime_big_eyes | bearded_old | hooded_face | robot_visor | skull_skeleton |
-      mask_ninja | chubby_kid | scarred_warrior | glasses_nerd | smug_evil
+      mask_ninja | chubby_kid | scarred_warrior | glasses_nerd | smug_evil |
+      cute_bangs_smile | cute_bangs_dot | cute_bangs_blush
     Or null to fall back to the parametric eye/brow/mouth/nose stack.
   - eye_shape: round | almond | wide | close_set | sleepy | dot | square | mono
   - eye_color: hex
@@ -147,13 +148,34 @@ Avoid "none" / "dot" combinations that produce blank faces.
 - The character's facial expression should match the prompt's energy
   (frown for a villain, wide_smile for a friendly kid, smirk for cyberpunk, etc.).
 
+## EYE / MOUTH COLOR HARMONY — IMPORTANT
+
+For CUTE / KAWAII / ANIME prompts: eye_color and mouth_color should be
+DERIVED FROM THE HAIR COLOR FAMILY, not picked independently. Real cute
+artists keep the whole face in one hue space.
+
+Examples:
+- Pink hair (#F4C2C2)? eye_color = #A993A1 (deep mauve), mouth_color = #D58999 (deep pink)
+- Green hair (#B6E5C3)? eye_color = #56705F (forest green), mouth_color = #629D63
+- Blue hair (#B4D7E5)? eye_color = #4A6678 (slate blue), mouth_color = #88AABB
+- Brown/blonde hair? eye_color = brown shade, mouth_color = warm pink
+
+NEVER pick generic black eye_color (#1A1A1A) or red mouth (#CC0000) on
+a cute character. The pure colors shatter the soft tonal vibe.
+
+eye_white can stay light, but for super-cute looks use cream tones like
+#FFEEDC or #FFE6E5 instead of pure #F0EFEB.
+
 ## CUTE / KAWAII / ANIME / PASTEL prompts — special handling
 
 If the prompt mentions "cute", "kawaii", "anime", "chibi", "soft",
 "pastel", "frog", "bunny", "girly", or describes the character as
 small / friendly / sweet:
-- face_template: prefer anime_big_eyes, feminine_round, round_face_smile,
-  chubby_kid, dot_eyes.
+- face_template: prefer the bangs-heavy options that frame the face tight:
+  cute_bangs_smile (recommended default), cute_bangs_dot, cute_bangs_blush,
+  anime_big_eyes, feminine_round, round_face_smile, chubby_kid.
+  These templates fill rows 0-2 of the face with hair so the face appears
+  small and framed — the core cute aesthetic.
 - skin_tone: lighter / paler shades like #F5D6B8, #FDE0C8, or pinkish
   #F5D0D0 work well for the soft vibe. NEVER muddy or grey.
 - palette: pastel hues — pink #F4C2C2, mint #B6E5C3, lavender #C8AFE0,

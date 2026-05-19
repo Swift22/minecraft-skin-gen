@@ -3,13 +3,15 @@ import type { HairStyleBundle } from './types'
 // Long flowing hair past shoulders — heavy hat_back vertical stripes.
 // hat_back has every-other-column filled all 8 rows for the "flowing" effect.
 export const long_flowing: HairStyleBundle = {
+  // Bangs use 3 interleaved shades (H base / h lighter / H base) so each
+  // row has hair-strand variation instead of solid blocks — corpus pattern.
   head_front_overlay: [
-    ['.', '.', '.', '.', '.', '.', '.', '.'],
-    ['.', '.', 'H', 'H', 'H', 'H', '.', '.'],
-    ['.', 'H', 'h', 'H', 'H', 'h', 'H', '.'],
+    ['H', 'h', 'H', 'h', 'h', 'H', 'h', 'H'],
+    ['H', 'H', 'h', 'H', 'H', 'h', 'H', 'H'],
+    ['H', 'h', 'H', 'h', 'h', 'H', 'h', 'H'],
     ['H', 'h', '.', '.', '.', '.', 'h', 'H'],
     ['H', '.', '.', '.', '.', '.', '.', 'H'],
-    ['.', '.', '.', '.', '.', '.', '.', '.'],
+    ['H', '.', '.', '.', '.', '.', '.', 'H'],
     ['.', '.', '.', '.', '.', '.', '.', '.'],
     ['.', '.', '.', '.', '.', '.', '.', '.'],
   ],

@@ -43,12 +43,20 @@ INNER LAYER (torso, arms, legs): the body itself.
 
 OUTER LAYER (jacket, sleeves, pants_outer): the visible over-garment.
   - Renders on TOP of the inner layer in 3D
-  - Use 8-15 unique colors with multi-shade gradients (see exemplars)
+  - **TARGET FILL DENSITY: 30-40% of the region.** Real cute-vibe jackets
+    have ~30 filled pixels out of 96 cells. The rest is transparent so
+    the inner shirt / skin shows through naturally. A 95%-filled outer
+    layer reads as a single boxy garment instead of a layered outfit.
+  - **TIGHT COLOR FAMILY: 4-6 shades of ONE hue family per region.**
+    Pick a base color, derive lighter + darker shades, that's the whole
+    palette for that region. Do not mix colors from across the full
+    intent palette — each region picks 1 hue + neutrals.
+  - **SILHOUETTE RULE: columns 0 and 7 of jacket_front are usually FILLED
+    down rows 1-10** with the base color. This is the silhouette outline
+    that makes the garment shape pop in 3D. Same for arm/leg side cols.
   - INTENTIONAL transparency is allowed for natural shaping: V-neck,
     open jacket front, bare arms between sleeve cuff and glove.
   - But where pixels ARE painted, they must be detailed and shaded.
-    A fully-painted outer region with only one flat color is wrong —
-    that's no better than the inner layer alone.
 
 ### Shading patterns from the corpus
 

@@ -21,6 +21,9 @@ const ALL_BODY_REGIONS: BodyRegion[] = [
   'torso_front', 'torso_back', 'torso_side',
   'arm_front', 'arm_side', 'arm_back',
   'leg_front', 'leg_side', 'leg_back',
+  // OUTER LAYERS — must be requested or the Artist never paints them
+  'jacket_front', 'jacket_back', 'jacket_side',
+  'sleeve_front', 'pants_outer_front',
 ]
 
 type ParsedInput =

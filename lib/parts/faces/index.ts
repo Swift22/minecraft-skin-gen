@@ -28,6 +28,7 @@ import { smug_evil } from './templates/smug_evil'
 import { cute_bangs_smile } from './templates/cute_bangs_smile'
 import { cute_bangs_dot } from './templates/cute_bangs_dot'
 import { cute_bangs_blush } from './templates/cute_bangs_blush'
+import { frog_face } from './templates/frog_face'
 
 export const faceTemplates = createRegistry({
   classic_hero,
@@ -59,6 +60,7 @@ export const faceTemplates = createRegistry({
   cute_bangs_smile,
   cute_bangs_dot,
   cute_bangs_blush,
+  frog_face,
 })
 
 export type FaceTemplateName = ReturnType<typeof faceTemplates.names>[number]

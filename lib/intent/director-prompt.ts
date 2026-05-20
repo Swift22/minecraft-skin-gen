@@ -14,7 +14,7 @@ Required fields:
       close_set_eyes | wide_spaced_eyes | nose_and_mouth | sleepy_halfopen | feminine_round |
       anime_big_eyes | bearded_old | hooded_face | robot_visor | skull_skeleton |
       mask_ninja | chubby_kid | scarred_warrior | glasses_nerd | smug_evil |
-      cute_bangs_smile | cute_bangs_dot | cute_bangs_blush
+      cute_bangs_smile | cute_bangs_dot | cute_bangs_blush | frog_face
     Or null to fall back to the parametric eye/brow/mouth/nose stack.
   - eye_shape: round | almond | wide | close_set | sleepy | dot | square | mono
   - eye_color: hex
@@ -127,6 +127,7 @@ template's hair pattern in the front view:
   scarred_warrior       → classic, spiky, undercut (battle-hardened, gladiator, rogue)
   glasses_nerd          → classic, side_part, bun (scientist, scholar, intellectual)
   smug_evil             → classic, side_part, undercut (villain, traitor, dark mage)
+  frog_face             → frog_hood ONLY (animal hoodie, frog/dino character, the hood IS the face)
 
 If face_template is set, eye_shape / brows / mouth / nose still need to be valid values
 (the schema requires them) but they are IGNORED at render time. Pick reasonable

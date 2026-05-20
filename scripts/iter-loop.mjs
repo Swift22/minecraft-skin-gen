@@ -12,13 +12,15 @@ const REF_DIR = 'scripts/namemc-skins'
 const OUT_DIR = 'scripts/iter-gens'
 const RUNS = parseInt(process.argv[2] ?? '3', 10)
 
-// 5 reference cute skins + the prompts we tune toward them.
+// 5 reference cute skins + prompts that HONESTLY describe each visible ref.
+// (Earlier prompts mismatched outfit colors which the scorer flagged as hue
+// losses — fixed by inspecting the actual ref images.)
 const PROMPTS = [
-  { ref: 'e31356d8346b58c0', label: 'pink_pastel', prompt: 'super cute kawaii girl, soft pink long flowing hair, pastel pink and white outfit, blushy cheeks, big anime eyes' },
-  { ref: '201b57b4da0bd9d1', label: 'green_pastel', prompt: 'kawaii pastel girl with long mint green flowing hair, cream and mint outfit, soft cheeks, sweet smile' },
-  { ref: '94ad2a0e52cfc4d1', label: 'twin_tail',    prompt: 'cute anime girl with twin tail pigtails brown hair, school uniform jacket with white collar, big eyes' },
-  { ref: 'bb2adcac96e12d93', label: 'long_blonde',  prompt: 'sweet kawaii girl with long blonde flowing hair past shoulders, soft yellow hoodie with white sleeves, blush' },
-  { ref: 'f2b8ea9653543e19', label: 'frog_hood',    prompt: 'tiny cute character in oversized green frog hoodie, antennae or hood ears, big sparkly eyes' },
+  { ref: 'e31356d8346b58c0', label: 'pink_pastel', prompt: 'super cute kawaii girl, soft pink long flowing hair past shoulders, pink dress with white trim, pink legs, blushy cheeks, big sparkly anime eyes' },
+  { ref: '201b57b4da0bd9d1', label: 'green_pastel', prompt: 'kawaii girl with long pastel green flowing hair past shoulders, cream sleeveless top with green skirt, soft cheeks, sweet smile' },
+  { ref: '94ad2a0e52cfc4d1', label: 'twin_tail',    prompt: 'cute kawaii girl with pink twin-tail pigtails, pastel pink hoodie and pink shorts, big innocent eyes, blush, all-pink aesthetic' },
+  { ref: 'bb2adcac96e12d93', label: 'long_blonde',  prompt: 'sweet kawaii girl with long blonde flowing hair past shoulders, white tee, black skirt with black leggings, soft pink blush' },
+  { ref: 'f2b8ea9653543e19', label: 'frog_hood',    prompt: 'tiny cute character wearing oversized green frog hoodie with hood ears on top, green pants, blush on cheeks, small simple face' },
 ]
 
 const REGIONS = {

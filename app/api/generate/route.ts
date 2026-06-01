@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { checkAndDeductCredit, refundCredit } from '@/lib/credits'
 import { runDirector } from '@/lib/intent/director'
 import { runArtist } from '@/lib/intent/artist'
 import { buildSkinPngV2, validateSkinV2 } from '@/lib/skin-builder-v2'
@@ -75,17 +74,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'no_input', message: 'Please provide a description or upload a reference image.' }, { status: 400 })
   }
 
-  const creditResult = await checkAndDeductCredit(user.id)
-  if (!creditResult.allowed) {
-    const tomorrow = new Date()
-    tomorrow.setUTCDate(tomorrow.getUTCDate() + 1)
-    tomorrow.setUTCHours(0, 0, 0, 0)
-    return NextResponse.json(
-      { error: 'generation_limit_reached', message: 'You have used all your generations for today. Upgrade for more.', resetAt: tomorrow.toISOString() },
-      { status: 402 }
-    )
-  }
-
   const [generation] = await db.insert(skinGenerations).values({
     userId: user.id, prompt, status: 'pending', schemaVersion: 'v2',
   }).returning({ id: skinGenerations.id })
@@ -128,14 +116,12 @@ export async function POST(request: NextRequest) {
       status: 'completed',
       skinUrl: signedUrlData?.signedUrl,
       intent,
-      creditsRemaining: creditResult.remaining,
     })
   } catch (err) {
-    await refundCredit(user.id)
     const errorMessage = err instanceof Error ? err.message : 'Unknown error'
     await db.update(skinGenerations).set({ status: 'failed', errorMessage }).where(eq(skinGenerations.id, generationId))
     console.error('Skin generation v2 failed:', errorMessage)
-    return NextResponse.json({ error: 'generation_failed', message: 'Skin generation failed. Your credit has been refunded. Please try again.' }, { status: 500 })
+    return NextResponse.json({ error: 'generation_failed', message: 'Skin generation failed. Please try again.' }, { status: 500 })
   }
 }
 
@@ -166,7 +152,6 @@ async function handleLocalMode(request: NextRequest) {
       status: 'completed',
       skinUrl: `/local-skins/${generationId}.png`,
       intent,
-      creditsRemaining: 999,
     })
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : 'Unknown error'

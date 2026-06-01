@@ -3,42 +3,22 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { CreditCounter } from '@/components/skin-generator/CreditCounter'
 import { GeneratorForm } from '@/components/skin-generator/GeneratorForm'
 import { SkinPreview } from '@/components/skin-generator/SkinPreview'
-import { UpgradePrompt } from '@/components/skin-generator/UpgradePrompt'
 import { Separator } from '@/components/ui/separator'
 import { Button } from '@/components/ui/button'
-import { AdUnit } from '@/components/ads/AdUnit'
 import { VariationsGrid } from '@/components/skin-editor/VariationsGrid'
 import type { SkinIntent } from '@/lib/intent/schema'
-
-const AD_BANNER_SLOT = '1234567890'
-
-interface UserData {
-  id: string
-  email: string
-  creditsRemaining: number
-  dailyLimit: number
-  isSubscriber: boolean
-  subscriptionEndsAt: string | null
-}
 
 interface GenerationResult {
   generationId: string
   status: 'completed' | 'failed'
   skinUrl?: string
   intent?: SkinIntent
-  creditsRemaining: number
 }
 
-interface GeneratorPageClientProps {
-  initialUser: UserData
-}
-
-export function GeneratorPageClient({ initialUser }: GeneratorPageClientProps) {
+export function GeneratorPageClient() {
   const router = useRouter()
-  const [user, setUser] = useState(initialUser)
   const [skinUrl, setSkinUrl] = useState<string | null>(null)
   const [generationId, setGenerationId] = useState<string | null>(null)
   const [intent, setIntent] = useState<SkinIntent | null>(null)
@@ -56,7 +36,6 @@ export function GeneratorPageClient({ initialUser }: GeneratorPageClientProps) {
     } else {
       toast.error('Generation failed. Please try again.')
     }
-    setUser((prev) => ({ ...prev, creditsRemaining: result.creditsRemaining }))
   }
 
   function handleError(message: string) {
@@ -80,10 +59,6 @@ export function GeneratorPageClient({ initialUser }: GeneratorPageClientProps) {
       body: JSON.stringify({ count: 3 }),
     })
     setVariationsLoading(false)
-    if (res.status === 402) {
-      toast.error('Not enough credits for variations')
-      return
-    }
     if (!res.ok) {
       toast.error('Variations failed')
       return
@@ -92,18 +67,10 @@ export function GeneratorPageClient({ initialUser }: GeneratorPageClientProps) {
     setVariations(j.variations)
   }
 
-  const isExhausted = user.creditsRemaining === 0
-
   return (
     <div className="animate-fade-in">
       <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
-        {!user.isSubscriber && <AdUnit slot={AD_BANNER_SLOT} />}
-
-        <CreditCounter creditsRemaining={user.creditsRemaining} dailyLimit={user.dailyLimit} />
-
         <Separator />
-
-        {isExhausted && !user.isSubscriber && <UpgradePrompt />}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Preview — shown first on mobile */}
@@ -119,7 +86,7 @@ export function GeneratorPageClient({ initialUser }: GeneratorPageClientProps) {
             {skinUrl && (
               <>
                 <Button onClick={handleGenerateVariations} disabled={variationsLoading}>
-                  {variationsLoading ? 'Generating variations…' : 'Generate 3 variations (3 credits)'}
+                  {variationsLoading ? 'Generating variations…' : 'Generate 3 variations'}
                 </Button>
                 {variations.length > 0 && (
                   <VariationsGrid
@@ -139,7 +106,6 @@ export function GeneratorPageClient({ initialUser }: GeneratorPageClientProps) {
               onResult={handleResult}
               onError={handleError}
               onLoadingChange={setIsGenerating}
-              disabled={isExhausted}
             />
           </div>
         </div>

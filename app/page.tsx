@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Wand2, ImagePlus, Download, Check, ArrowRight } from 'lucide-react'
+import { Wand2, ImagePlus, Download, Sparkles, ArrowRight } from 'lucide-react'
 
 export default function HomePage() {
   return (
@@ -44,7 +44,7 @@ export default function HomePage() {
             </div>
 
             <p className="text-xs text-muted-foreground font-pixel">
-              &gt; No credit card required &middot; 3 free skins daily
+              &gt; Free &middot; Unlimited &middot; No ads
             </p>
           </div>
         </div>
@@ -169,68 +169,33 @@ export default function HomePage() {
         ))}
       </div>
 
-      {/* Pricing */}
+      {/* Free Access */}
       <section className="py-20 px-4 bg-card/30">
         <div className="max-w-3xl mx-auto">
-          <h2 className="font-pixel text-sm text-center mb-4">[ PRICING ]</h2>
+          <h2 className="font-pixel text-sm text-center mb-4">[ FREE ACCESS ]</h2>
           <p className="text-center text-muted-foreground mb-12">
-            Start free, upgrade when you need more.
+            Generate as many Minecraft skins as you want. No payments, no ads, no daily cap.
           </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-            {/* Free */}
-            <Card className="card-hover">
-              <CardHeader>
-                <div className="font-pixel text-xs text-muted-foreground mb-1">PLAN</div>
-                <CardTitle className="font-pixel text-sm">FREE</CardTitle>
-                <p className="text-3xl font-bold mt-2">$0</p>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {['3 skins per day', 'Download as PNG', '3D preview', 'Text & image input'].map(
-                  (feature) => (
-                    <div key={feature} className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Check className="h-4 w-4 text-primary flex-shrink-0" />
-                      {feature}
-                    </div>
-                  )
-                )}
-                <Button asChild variant="outline" className="w-full mt-4">
-                  <Link href="/signup">Get Started</Link>
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Pro */}
-            <Card className="card-hover border-primary/60 shadow-[4px_4px_0_0_hsl(var(--primary)/0.4)] relative">
-              <div className="absolute -top-[1.125rem] left-4">
-                <span className="bg-primary text-primary-foreground font-pixel text-[9px] px-3 py-1 border-2 border-primary shadow-[2px_2px_0_0_hsl(127_40%_25%)]">
-                  POPULAR
-                </span>
-              </div>
-              <CardHeader>
-                <div className="font-pixel text-xs text-primary mb-1">PLAN</div>
-                <CardTitle className="font-pixel text-sm text-primary">PRO</CardTitle>
-                <p className="text-3xl font-bold mt-2">
-                  $5<span className="text-base font-normal text-muted-foreground">/mo</span>
-                </p>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {[
-                  '50 skins per day',
-                  'No ads',
-                  'Priority generation',
-                  'All free features',
-                ].map((feature) => (
+          <Card className="card-hover">
+            <CardHeader>
+              <div className="font-pixel text-xs text-muted-foreground mb-1">ACCESS</div>
+              <CardTitle className="font-pixel text-sm">UNLIMITED</CardTitle>
+              <p className="text-3xl font-bold mt-2">$0</p>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {['Unlimited skin generation', 'Download as PNG', '3D preview', 'Text & image input'].map(
+                (feature) => (
                   <div key={feature} className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Check className="h-4 w-4 text-primary flex-shrink-0" />
+                    <Sparkles className="h-4 w-4 text-primary flex-shrink-0" />
                     {feature}
                   </div>
-                ))}
-                <Button asChild className="w-full mt-4">
-                  <Link href="/signup">Start Pro</Link>
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
+                )
+              )}
+              <Button asChild variant="outline" className="w-full mt-4">
+                <Link href="/signup">Get Started</Link>
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       </section>
 

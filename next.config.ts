@@ -7,12 +7,12 @@ const SECURITY_HEADERS = [
       "default-src 'self'",
       // Next.js App Router needs 'unsafe-inline' + 'unsafe-eval' for hydration scripts.
       // TODO: migrate to nonce-based CSP — tracked separately.
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://pagead2.googlesyndication.com https://adservice.google.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https:",
       "font-src 'self'",
       "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://generativelanguage.googleapis.com",
-      "frame-src https://pagead2.googlesyndication.com https://tpc.googlesyndication.com",
+      "frame-src 'none'",
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",

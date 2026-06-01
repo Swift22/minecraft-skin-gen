@@ -15,7 +15,6 @@ interface GenerationResult {
   generationId: string
   status: 'completed' | 'failed'
   skinUrl?: string
-  creditsRemaining: number
 }
 
 interface GeneratorFormProps {

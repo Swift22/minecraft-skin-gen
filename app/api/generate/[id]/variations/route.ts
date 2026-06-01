@@ -4,7 +4,6 @@ import { createClient } from '@/lib/supabase/server'
 import { db } from '@/lib/db'
 import { skinGenerations } from '@/lib/db/schema'
 import { eq } from 'drizzle-orm'
-import { checkAndDeductCredit, refundCredit } from '@/lib/credits'
 import { runArtist } from '@/lib/intent/artist'
 import { buildSkinPngV2 } from '@/lib/skin-builder-v2'
 import { skinIntentSchema, skinPixelsSchema, type SkinIntent, type SkinPixels, type BodyRegion } from '@/lib/intent/schema'
@@ -39,18 +38,6 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
       return NextResponse.json({ error: 'unauthorized' }, { status: 401 })
     }
 
-    // Charge N credits up front
-    for (let i = 0; i < body.data.count; i++) {
-      const r = await checkAndDeductCredit(user.id)
-      if (!r.allowed) {
-        // Refund any already deducted
-        for (let j = 0; j < i; j++) await refundCredit(user.id)
-        return NextResponse.json(
-          { error: 'generation_limit_reached', message: `Not enough credits for ${body.data.count} variations.` },
-          { status: 402 }
-        )
-      }
-    }
   }
 
   const userId = gen.userId
@@ -68,11 +55,6 @@ export async function POST(request: NextRequest, ctx: { params: Promise<{ id: st
     if (r.status === 'fulfilled') variations.push(r.value)
     else failures.push(i)
   })
-
-  // Refund failed variations
-  if (!IS_LOCAL_MODE) {
-    for (let i = 0; i < failures.length; i++) await refundCredit(userId)
-  }
 
   return NextResponse.json({ variations, failedCount: failures.length })
 }

@@ -45,11 +45,6 @@ vi.mock('@/lib/supabase/server', () => ({
   createClient: vi.fn(),
 }))
 
-vi.mock('@/lib/credits', () => ({
-  checkAndDeductCredit: vi.fn(),
-  refundCredit: vi.fn(),
-}))
-
 vi.mock('@/lib/db', () => ({
   db: {
     insert: vi.fn(),

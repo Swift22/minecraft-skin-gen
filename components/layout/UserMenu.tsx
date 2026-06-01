@@ -11,18 +11,17 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Wand2, ImageIcon, User, CreditCard, LogOut } from 'lucide-react'
+import { Wand2, ImageIcon, User, LogOut } from 'lucide-react'
 
 interface UserMenuProps {
   email: string
-  isSubscriber: boolean
 }
 
 function getInitials(email: string): string {
   return email.charAt(0).toUpperCase()
 }
 
-export function UserMenu({ email, isSubscriber }: UserMenuProps) {
+export function UserMenu({ email }: UserMenuProps) {
   const router = useRouter()
 
   async function handleSignOut() {
@@ -30,12 +29,6 @@ export function UserMenu({ email, isSubscriber }: UserMenuProps) {
     await supabase.auth.signOut()
     router.push('/login')
     router.refresh()
-  }
-
-  async function handleManageSubscription() {
-    const response = await fetch('/api/subscription/portal', { method: 'POST' })
-    const data = await response.json()
-    if (data.url) window.location.href = data.url
   }
 
   return (
@@ -70,12 +63,6 @@ export function UserMenu({ email, isSubscriber }: UserMenuProps) {
             Account
           </Link>
         </DropdownMenuItem>
-        {isSubscriber && (
-          <DropdownMenuItem onClick={handleManageSubscription} className="cursor-pointer">
-            <CreditCard className="mr-2 h-4 w-4" />
-            Manage Subscription
-          </DropdownMenuItem>
-        )}
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive">
           <LogOut className="mr-2 h-4 w-4" />

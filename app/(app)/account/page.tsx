@@ -1,9 +1,8 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { db } from '@/lib/db'
-import { users, subscriptions, skinGenerations } from '@/lib/db/schema'
-import { eq, and, gt, count } from 'drizzle-orm'
-import { getDailyLimit } from '@/lib/credits'
+import { users, skinGenerations } from '@/lib/db/schema'
+import { eq, count } from 'drizzle-orm'
 import { AccountPageClient } from './AccountPageClient'
 import { IS_LOCAL_MODE, LOCAL_USER } from '@/lib/local-mode'
 
@@ -19,11 +18,7 @@ export default async function AccountPage() {
       <AccountPageClient
         data={{
           email: LOCAL_USER.email,
-          createdAt: new Date().toISOString(),
-          isSubscriber: LOCAL_USER.isSubscriber,
-          subscriptionEndsAt: null,
-          creditsRemaining: LOCAL_USER.creditsRemaining,
-          dailyLimit: LOCAL_USER.dailyLimit,
+          createdAt: LOCAL_USER.createdAt,
           totalGenerations: 0,
         }}
       />
@@ -38,8 +33,6 @@ export default async function AccountPage() {
     .select({
       id: users.id,
       email: users.email,
-      generationsToday: users.generationsToday,
-      generationsResetAt: users.generationsResetAt,
       createdAt: users.createdAt,
     })
     .from(users)
@@ -47,32 +40,6 @@ export default async function AccountPage() {
     .limit(1)
 
   if (!userRow) redirect('/login')
-
-  const now = new Date()
-  const todayUtcStart = new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
-  )
-
-  const [subscription] = await db
-    .select({
-      stripeCurrentPeriodEnd: subscriptions.stripeCurrentPeriodEnd,
-      status: subscriptions.status,
-    })
-    .from(subscriptions)
-    .where(
-      and(
-        eq(subscriptions.userId, user.id),
-        eq(subscriptions.status, 'active'),
-        gt(subscriptions.stripeCurrentPeriodEnd, now)
-      )
-    )
-    .limit(1)
-
-  const isSubscriber = !!subscription
-  const dailyLimit = getDailyLimit(isSubscriber)
-  const effectiveGenerationsToday =
-    userRow.generationsResetAt < todayUtcStart ? 0 : userRow.generationsToday
-  const creditsRemaining = Math.max(0, dailyLimit - effectiveGenerationsToday)
 
   const [totalResult] = await db
     .select({ value: count() })
@@ -84,10 +51,6 @@ export default async function AccountPage() {
       data={{
         email: userRow.email,
         createdAt: userRow.createdAt.toISOString(),
-        isSubscriber,
-        subscriptionEndsAt: subscription?.stripeCurrentPeriodEnd?.toISOString() ?? null,
-        creditsRemaining,
-        dailyLimit,
         totalGenerations: totalResult?.value ?? 0,
       }}
     />

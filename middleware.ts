@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { IS_LOCAL_MODE } from '@/lib/local-mode'
 import { env } from '@/lib/env'
 
-const PROTECTED_ROUTES = ['/generate', '/gallery', '/account', '/edit', '/api/generate', '/api/gallery', '/api/user', '/api/subscription']
+const PROTECTED_ROUTES = ['/generate', '/gallery', '/account', '/edit', '/api/generate', '/api/gallery', '/api/user']
 const AUTH_ROUTES = ['/login', '/signup']
 
 export async function middleware(request: NextRequest) {

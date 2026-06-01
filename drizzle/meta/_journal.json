@@ -8,6 +8,13 @@
       "when": 1778932622094,
       "tag": "0000_powerful_vivisector",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1780282036785,
+      "tag": "0001_cynical_dark_beast",
+      "breakpoints": true
     }
   ]
 }

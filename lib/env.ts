@@ -6,7 +6,6 @@ const baseSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   LOCAL_MODE: z.string().optional(),
   NEXT_PUBLIC_APP_URL: z.string().url().optional(),
-  NEXT_PUBLIC_ADSENSE_CLIENT: z.string().optional(),
 })
 
 const cloudSchema = baseSchema.extend({
@@ -14,10 +13,6 @@ const cloudSchema = baseSchema.extend({
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
   GEMINI_API_KEY: z.string().min(1),
-  STRIPE_SECRET_KEY: z.string().min(1),
-  STRIPE_WEBHOOK_SECRET: z.string().min(1),
-  STRIPE_PRO_PRICE_ID: z.string().min(1),
-  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().min(1),
   DATABASE_URL: z.string().url(),
 })
 
@@ -26,10 +21,6 @@ const localSchema = baseSchema.extend({
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
   GEMINI_API_KEY: z.string().min(1),
-  STRIPE_SECRET_KEY: z.string().optional(),
-  STRIPE_WEBHOOK_SECRET: z.string().optional(),
-  STRIPE_PRO_PRICE_ID: z.string().optional(),
-  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
   DATABASE_URL: z.string().url().optional(),
 })
 

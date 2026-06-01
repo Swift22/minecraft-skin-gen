@@ -12,9 +12,6 @@ import { cn } from '@/lib/utils'
 
 interface NavUser {
   email: string
-  isSubscriber: boolean
-  creditsRemaining: number
-  dailyLimit: number
 }
 
 const NAV_LINKS = [
@@ -40,9 +37,6 @@ export function Navbar() {
             const data = await response.json()
             setUser({
               email: data.email,
-              isSubscriber: data.isSubscriber,
-              creditsRemaining: data.creditsRemaining,
-              dailyLimit: data.dailyLimit,
             })
           }
         }
@@ -90,14 +84,7 @@ export function Navbar() {
           {!loading && (
             <>
               {isAuthenticated && user ? (
-                <>
-                  {/* Pixel credit badge */}
-                  <div className="hidden sm:flex items-center gap-1 border-2 border-border px-2 py-0.5 bg-secondary shadow-[2px_2px_0_0_hsl(var(--border))]">
-                    <span className="font-pixel text-[9px] text-primary">{user.creditsRemaining}</span>
-                    <span className="font-pixel text-[9px] text-muted-foreground">/{user.dailyLimit}</span>
-                  </div>
-                  <UserMenu email={user.email} isSubscriber={user.isSubscriber} />
-                </>
+                <UserMenu email={user.email} />
               ) : (
                 <div className="hidden md:flex items-center gap-2">
                   <Button asChild variant="ghost" size="sm">

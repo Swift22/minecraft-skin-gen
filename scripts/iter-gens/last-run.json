@@ -1,0 +1,755 @@
+{
+  "results": [
+    {
+      "label": "pink_pastel",
+      "sim": 86.875,
+      "hair": "long_flowing",
+      "intent": {
+        "version": 1,
+        "seed": 73291,
+        "style": "arcade",
+        "palette": [
+          "#F4C2C2",
+          "#F0F0F0",
+          "#FFC0CB",
+          "#B4D7E5",
+          "#FFF1A8"
+        ],
+        "palette_mode": "soft",
+        "character": {
+          "skin_tone": "#F5D0D0",
+          "face_template": "cute_bangs_blush",
+          "eye_shape": "round",
+          "eye_color": "#A993A1",
+          "eye_white": "#FFE6E5",
+          "brows": "flat",
+          "mouth": "smile",
+          "mouth_color": "#D58999",
+          "nose": "bridge",
+          "nose_shadow": "#E5C0C0",
+          "hair_style": "long_flowing",
+          "hair_length": "long",
+          "hair_color": "#F4C2C2",
+          "hair_accent_color": "#FFC0CB",
+          "ear_template": "none",
+          "ear_color": "#F4C2C2",
+          "inner_ear_color": "#FEE6E5"
+        },
+        "outfit": {
+          "torso": "pale pink undershirt",
+          "arms": "pale pink undershirt sleeves",
+          "legs": "soft pink tights",
+          "jacket": "puffy pastel pink dress with a sweetheart neckline and white lace trim along the edges",
+          "sleeves": "puffy pastel pink short sleeves with white ruffled cuffs",
+          "pants_outer": "flared skirt portion of the pink dress with a subtle white trim at the hem",
+          "accessories": "small white ribbon bow at the back of the neck"
+        },
+        "refinement_history": []
+      },
+      "items": [
+        {
+          "metric": "jacket_fill",
+          "refV": 0.3229166666666667,
+          "genV": 0.16666666666666666,
+          "diff": 4.687500000000001,
+          "weight": 30
+        },
+        {
+          "metric": "pants_outer_fill",
+          "refV": 0.3333333333333333,
+          "genV": 0.125,
+          "diff": 3.1249999999999996,
+          "weight": 15
+        },
+        {
+          "metric": "hat_front_fill",
+          "refV": 0.453125,
+          "genV": 0.53125,
+          "diff": 1.5625,
+          "weight": 20
+        },
+        {
+          "metric": "hat_back_fill",
+          "refV": 0.453125,
+          "genV": 0.40625,
+          "diff": 1.40625,
+          "weight": 30
+        },
+        {
+          "metric": "hat_top_fill",
+          "refV": 0.15625,
+          "genV": 0.25,
+          "diff": 1.40625,
+          "weight": 15
+        },
+        {
+          "metric": "sleeve_fill",
+          "refV": 0.20833333333333334,
+          "genV": 0.25,
+          "diff": 0.6249999999999999,
+          "weight": 15
+        },
+        {
+          "metric": "hat_symmetry",
+          "refV": 0.96875,
+          "genV": 1,
+          "diff": 0.3125,
+          "weight": 10
+        },
+        {
+          "metric": "head_front_hue",
+          "refV": "red",
+          "genV": "red",
+          "diff": 0,
+          "weight": 10
+        },
+        {
+          "metric": "hat_front_hue",
+          "refV": "red",
+          "genV": "red",
+          "diff": 0,
+          "weight": 8
+        },
+        {
+          "metric": "jacket_front_hue",
+          "refV": "red",
+          "genV": "red",
+          "diff": 0,
+          "weight": 8
+        },
+        {
+          "metric": "face_framing",
+          "refV": 1,
+          "genV": 1,
+          "diff": 0,
+          "weight": 25
+        },
+        {
+          "metric": "jacket_unique",
+          "refV": 4,
+          "genV": 6,
+          "diff": 0,
+          "weight": 2
+        }
+      ],
+      "ref": {
+        "head_front_hue": "red",
+        "hat_front_hue": "red",
+        "jacket_front_hue": "red",
+        "hat_top_fill": 0.15625,
+        "hat_front_fill": 0.453125,
+        "hat_right_fill": 0.234375,
+        "hat_left_fill": 0.234375,
+        "hat_back_fill": 0.453125,
+        "jacket_fill": 0.3229166666666667,
+        "sleeve_fill": 0.20833333333333334,
+        "pants_outer_fill": 0.3333333333333333,
+        "head_front_unique": 6,
+        "jacket_unique": 4,
+        "hat_front_unique": 4,
+        "face_framing": 1,
+        "hat_symmetry": 0.96875
+      }
+    },
+    {
+      "label": "green_pastel",
+      "sim": 55.5625,
+      "hair": "long_flowing",
+      "intent": {
+        "version": 1,
+        "seed": 73281,
+        "style": "modern",
+        "palette": [
+          "#FAF5F2",
+          "#B6E5C3",
+          "#D0EBD0",
+          "#F4C2C2",
+          "#8DB99B"
+        ],
+        "palette_mode": "soft",
+        "character": {
+          "skin_tone": "#FDE0C8",
+          "face_template": "cute_bangs_smile",
+          "eye_shape": "round",
+          "eye_color": "#6F9B78",
+          "eye_white": "#FFEEDC",
+          "brows": "flat",
+          "mouth": "smile",
+          "mouth_color": "#EFA8B5",
+          "nose": "bridge",
+          "nose_shadow": "#E0C7B2",
+          "hair_style": "long_flowing",
+          "hair_length": "very_long",
+          "hair_color": "#B6E5C3",
+          "hair_accent_color": "#D0EBD0",
+          "ear_template": "round",
+          "ear_color": "#B6E5C3",
+          "inner_ear_color": "#F4C2C2"
+        },
+        "outfit": {
+          "torso": "cream sleeveless crop top",
+          "arms": "skin (bare arms)",
+          "legs": "pastel green miniskirt",
+          "jacket": "loose fitting cream top with subtle ruffles along the hem",
+          "sleeves": "none (bare arms)",
+          "pants_outer": "pleated pastel green skirt with a delicate lighter green trim at the bottom",
+          "accessories": "small pastel green bow detail in hair"
+        },
+        "refinement_history": []
+      },
+      "items": [
+        {
+          "metric": "head_front_hue",
+          "refV": "yellow",
+          "genV": "green",
+          "diff": 10,
+          "weight": 10
+        },
+        {
+          "metric": "hat_front_hue",
+          "refV": "yellow",
+          "genV": "green",
+          "diff": 8,
+          "weight": 8
+        },
+        {
+          "metric": "jacket_front_hue",
+          "refV": "yellow",
+          "genV": "gray",
+          "diff": 8,
+          "weight": 8
+        },
+        {
+          "metric": "hat_back_fill",
+          "refV": 0.28125,
+          "genV": 0.5,
+          "diff": 6.5625,
+          "weight": 30
+        },
+        {
+          "metric": "jacket_fill",
+          "refV": 0.3958333333333333,
+          "genV": 0.5833333333333334,
+          "diff": 5.625000000000002,
+          "weight": 30
+        },
+        {
+          "metric": "hat_top_fill",
+          "refV": 0,
+          "genV": 0.25,
+          "diff": 3.75,
+          "weight": 15
+        },
+        {
+          "metric": "pants_outer_fill",
+          "refV": 0.16666666666666666,
+          "genV": 0.25,
+          "diff": 1.2500000000000002,
+          "weight": 15
+        },
+        {
+          "metric": "hat_front_fill",
+          "refV": 0.5,
+          "genV": 0.53125,
+          "diff": 0.625,
+          "weight": 20
+        },
+        {
+          "metric": "sleeve_fill",
+          "refV": 0.041666666666666664,
+          "genV": 0,
+          "diff": 0.625,
+          "weight": 15
+        },
+        {
+          "metric": "face_framing",
+          "refV": 1,
+          "genV": 1,
+          "diff": 0,
+          "weight": 25
+        },
+        {
+          "metric": "hat_symmetry",
+          "refV": 1,
+          "genV": 1,
+          "diff": 0,
+          "weight": 10
+        },
+        {
+          "metric": "jacket_unique",
+          "refV": 8,
+          "genV": 6,
+          "diff": 0,
+          "weight": 2
+        }
+      ],
+      "ref": {
+        "head_front_hue": "yellow",
+        "hat_front_hue": "yellow",
+        "jacket_front_hue": "yellow",
+        "hat_top_fill": 0,
+        "hat_front_fill": 0.5,
+        "hat_right_fill": 0.296875,
+        "hat_left_fill": 0.296875,
+        "hat_back_fill": 0.28125,
+        "jacket_fill": 0.3958333333333333,
+        "sleeve_fill": 0.041666666666666664,
+        "pants_outer_fill": 0.16666666666666666,
+        "head_front_unique": 8,
+        "jacket_unique": 8,
+        "hat_front_unique": 5,
+        "face_framing": 1,
+        "hat_symmetry": 1
+      }
+    },
+    {
+      "label": "twin_tail",
+      "sim": 87.8125,
+      "hair": "twin_tails",
+      "intent": {
+        "version": 1,
+        "seed": 73291,
+        "style": "modern",
+        "palette": [
+          "#FFC0CB",
+          "#FFDDE2",
+          "#E0A0AA",
+          "#FAFAFA"
+        ],
+        "palette_mode": "soft",
+        "character": {
+          "skin_tone": "#FDE0C8",
+          "face_template": "cute_bangs_blush",
+          "eye_shape": "round",
+          "eye_color": "#A993A1",
+          "eye_white": "#FFEEDC",
+          "brows": "flat",
+          "mouth": "smile",
+          "mouth_color": "#D58999",
+          "nose": "dot",
+          "nose_shadow": "#E0BBA8",
+          "hair_style": "twin_tails",
+          "hair_length": "long",
+          "hair_color": "#F4C2C2",
+          "hair_accent_color": "#FFE2E2",
+          "ear_template": "none",
+          "ear_color": "#F4C2C2",
+          "inner_ear_color": "#FFEEDC"
+        },
+        "outfit": {
+          "torso": "simple white undershirt",
+          "arms": "skin (bare arms)",
+          "legs": "skin (bare legs)",
+          "jacket": "pastel pink oversized hoodie with a puffy collar, white drawstrings, and a small heart emblem on the chest",
+          "sleeves": "puffy pastel pink hoodie sleeves with elasticated white cuffs",
+          "pants_outer": "pastel pink shorts with a light pink ribbon belt",
+          "accessories": "small pink bows on each twin-tail"
+        },
+        "refinement_history": []
+      },
+      "items": [
+        {
+          "metric": "jacket_fill",
+          "refV": 0.14583333333333334,
+          "genV": 0.34375,
+          "diff": 5.9375,
+          "weight": 30
+        },
+        {
+          "metric": "hat_back_fill",
+          "refV": 0.46875,
+          "genV": 0.375,
+          "diff": 2.8125,
+          "weight": 30
+        },
+        {
+          "metric": "pants_outer_fill",
+          "refV": 0.08333333333333333,
+          "genV": 0.22916666666666666,
+          "diff": 2.1874999999999996,
+          "weight": 15
+        },
+        {
+          "metric": "sleeve_fill",
+          "refV": 0.16666666666666666,
+          "genV": 0.25,
+          "diff": 1.2500000000000002,
+          "weight": 15
+        },
+        {
+          "metric": "head_front_hue",
+          "refV": "red",
+          "genV": "red",
+          "diff": 0,
+          "weight": 10
+        },
+        {
+          "metric": "hat_front_hue",
+          "refV": "red",
+          "genV": "red",
+          "diff": 0,
+          "weight": 8
+        },
+        {
+          "metric": "jacket_front_hue",
+          "refV": "red",
+          "genV": "red",
+          "diff": 0,
+          "weight": 8
+        },
+        {
+          "metric": "hat_top_fill",
+          "refV": 0.3125,
+          "genV": 0.3125,
+          "diff": 0,
+          "weight": 15
+        },
+        {
+          "metric": "hat_front_fill",
+          "refV": 0.4375,
+          "genV": 0.4375,
+          "diff": 0,
+          "weight": 20
+        },
+        {
+          "metric": "face_framing",
+          "refV": 1,
+          "genV": 1,
+          "diff": 0,
+          "weight": 25
+        },
+        {
+          "metric": "hat_symmetry",
+          "refV": 1,
+          "genV": 1,
+          "diff": 0,
+          "weight": 10
+        },
+        {
+          "metric": "jacket_unique",
+          "refV": 4,
+          "genV": 6,
+          "diff": 0,
+          "weight": 2
+        }
+      ],
+      "ref": {
+        "head_front_hue": "red",
+        "hat_front_hue": "red",
+        "jacket_front_hue": "red",
+        "hat_top_fill": 0.3125,
+        "hat_front_fill": 0.4375,
+        "hat_right_fill": 0.4375,
+        "hat_left_fill": 0.4375,
+        "hat_back_fill": 0.46875,
+        "jacket_fill": 0.14583333333333334,
+        "sleeve_fill": 0.16666666666666666,
+        "pants_outer_fill": 0.08333333333333333,
+        "head_front_unique": 9,
+        "jacket_unique": 4,
+        "hat_front_unique": 3,
+        "face_framing": 1,
+        "hat_symmetry": 1
+      }
+    },
+    {
+      "label": "long_blonde",
+      "sim": 52.463541666666664,
+      "hair": "long_flowing",
+      "intent": {
+        "version": 1,
+        "seed": 73281,
+        "style": "arcade",
+        "palette": [
+          "#F0F0F0",
+          "#1A1A1A",
+          "#F4C2C2"
+        ],
+        "palette_mode": "soft",
+        "character": {
+          "skin_tone": "#F5D0D0",
+          "face_template": "cute_bangs_smile",
+          "eye_shape": "round",
+          "eye_color": "#7F6B58",
+          "eye_white": "#FFEEDC",
+          "brows": "flat",
+          "mouth": "smile",
+          "mouth_color": "#D58999",
+          "nose": "bridge",
+          "nose_shadow": "#D4B4B4",
+          "hair_style": "long_flowing",
+          "hair_length": "long",
+          "hair_color": "#F5DEB3",
+          "hair_accent_color": "#FFFACD",
+          "ear_template": "round",
+          "ear_color": "#F5DEB3",
+          "inner_ear_color": "#FFE6E5"
+        },
+        "outfit": {
+          "torso": "simple white t-shirt base",
+          "arms": "skin (bare arms)",
+          "legs": "black leggings",
+          "jacket": "white oversized t-shirt with gentle folds, providing volume to the top",
+          "sleeves": "short, slightly puffy sleeves of the white t-shirt",
+          "pants_outer": "black pleated skirt worn over leggings, reaching mid-thigh",
+          "accessories": "soft pink blush on cheeks, small pink ribbon bow in hair"
+        },
+        "refinement_history": []
+      },
+      "items": [
+        {
+          "metric": "head_front_hue",
+          "refV": "red",
+          "genV": "yellow",
+          "diff": 10,
+          "weight": 10
+        },
+        {
+          "metric": "hat_front_hue",
+          "refV": "red",
+          "genV": "yellow",
+          "diff": 8,
+          "weight": 8
+        },
+        {
+          "metric": "jacket_unique",
+          "refV": 10,
+          "genV": 4,
+          "diff": 8,
+          "weight": 2
+        },
+        {
+          "metric": "jacket_fill",
+          "refV": 0.3854166666666667,
+          "genV": 0.19791666666666666,
+          "diff": 5.625000000000001,
+          "weight": 30
+        },
+        {
+          "metric": "face_framing",
+          "refV": 0.7916666666666666,
+          "genV": 1,
+          "diff": 5.208333333333334,
+          "weight": 25
+        },
+        {
+          "metric": "sleeve_fill",
+          "refV": 0.375,
+          "genV": 0.16666666666666666,
+          "diff": 3.125,
+          "weight": 15
+        },
+        {
+          "metric": "hat_front_fill",
+          "refV": 0.390625,
+          "genV": 0.53125,
+          "diff": 2.8125,
+          "weight": 20
+        },
+        {
+          "metric": "pants_outer_fill",
+          "refV": 0.3541666666666667,
+          "genV": 0.1875,
+          "diff": 2.5000000000000004,
+          "weight": 15
+        },
+        {
+          "metric": "hat_top_fill",
+          "refV": 0.328125,
+          "genV": 0.25,
+          "diff": 1.171875,
+          "weight": 15
+        },
+        {
+          "metric": "hat_symmetry",
+          "refV": 0.890625,
+          "genV": 1,
+          "diff": 1.09375,
+          "weight": 10
+        },
+        {
+          "metric": "jacket_front_hue",
+          "refV": "gray",
+          "genV": "gray",
+          "diff": 0,
+          "weight": 8
+        },
+        {
+          "metric": "hat_back_fill",
+          "refV": 0.40625,
+          "genV": 0.40625,
+          "diff": 0,
+          "weight": 30
+        }
+      ],
+      "ref": {
+        "head_front_hue": "red",
+        "hat_front_hue": "red",
+        "jacket_front_hue": "gray",
+        "hat_top_fill": 0.328125,
+        "hat_front_fill": 0.390625,
+        "hat_right_fill": 0.453125,
+        "hat_left_fill": 0.4375,
+        "hat_back_fill": 0.40625,
+        "jacket_fill": 0.3854166666666667,
+        "sleeve_fill": 0.375,
+        "pants_outer_fill": 0.3541666666666667,
+        "head_front_unique": 10,
+        "jacket_unique": 10,
+        "hat_front_unique": 2,
+        "face_framing": 0.7916666666666666,
+        "hat_symmetry": 0.890625
+      }
+    },
+    {
+      "label": "frog_hood",
+      "sim": 84.375,
+      "hair": "frog_hood",
+      "intent": {
+        "version": 1,
+        "seed": 58739,
+        "style": "arcade",
+        "palette": [
+          "#7FC68C",
+          "#B2DFA8",
+          "#F5A9A9",
+          "#FAF5F2"
+        ],
+        "palette_mode": "soft",
+        "character": {
+          "skin_tone": "#F5D6B8",
+          "face_template": "cute_bangs_blush",
+          "eye_shape": "round",
+          "eye_color": "#56705F",
+          "eye_white": "#FFEEDC",
+          "brows": "flat",
+          "mouth": "smile",
+          "mouth_color": "#D58999",
+          "nose": "dot",
+          "nose_shadow": "#E0C0A5",
+          "hair_style": "frog_hood",
+          "hair_length": "short",
+          "hair_color": "#7FC68C",
+          "hair_accent_color": "#B2DFA8",
+          "ear_template": "none",
+          "ear_color": "#7FC68C",
+          "inner_ear_color": "#FAF5F2"
+        },
+        "outfit": {
+          "torso": "simple light undershirt",
+          "arms": "simple light undershirt sleeves",
+          "legs": "green base pants",
+          "jacket": "oversized soft green frog hoodie with large hood and prominent circular frog eyes/ears on top",
+          "sleeves": "puffy green hoodie sleeves with soft cuffs",
+          "pants_outer": "baggy green pants matching the hoodie, with a slight texture",
+          "accessories": "small embroidered lily pad detail on chest of hoodie"
+        },
+        "refinement_history": []
+      },
+      "items": [
+        {
+          "metric": "hat_back_fill",
+          "refV": 0.375,
+          "genV": 0.21875,
+          "diff": 4.6875,
+          "weight": 30
+        },
+        {
+          "metric": "jacket_fill",
+          "refV": 0.375,
+          "genV": 0.22916666666666666,
+          "diff": 4.375,
+          "weight": 30
+        },
+        {
+          "metric": "sleeve_fill",
+          "refV": 0.041666666666666664,
+          "genV": 0.2916666666666667,
+          "diff": 3.75,
+          "weight": 15
+        },
+        {
+          "metric": "pants_outer_fill",
+          "refV": 0.0625,
+          "genV": 0.14583333333333334,
+          "diff": 1.2500000000000002,
+          "weight": 15
+        },
+        {
+          "metric": "hat_front_fill",
+          "refV": 0.46875,
+          "genV": 0.40625,
+          "diff": 1.25,
+          "weight": 20
+        },
+        {
+          "metric": "hat_symmetry",
+          "refV": 0.96875,
+          "genV": 1,
+          "diff": 0.3125,
+          "weight": 10
+        },
+        {
+          "metric": "head_front_hue",
+          "refV": "green",
+          "genV": "green",
+          "diff": 0,
+          "weight": 10
+        },
+        {
+          "metric": "hat_front_hue",
+          "refV": "green",
+          "genV": "green",
+          "diff": 0,
+          "weight": 8
+        },
+        {
+          "metric": "jacket_front_hue",
+          "refV": "green",
+          "genV": "green",
+          "diff": 0,
+          "weight": 8
+        },
+        {
+          "metric": "hat_top_fill",
+          "refV": 0.125,
+          "genV": 0.125,
+          "diff": 0,
+          "weight": 15
+        },
+        {
+          "metric": "face_framing",
+          "refV": 1,
+          "genV": 1,
+          "diff": 0,
+          "weight": 25
+        },
+        {
+          "metric": "jacket_unique",
+          "refV": 2,
+          "genV": 4,
+          "diff": 0,
+          "weight": 2
+        }
+      ],
+      "ref": {
+        "head_front_hue": "green",
+        "hat_front_hue": "green",
+        "jacket_front_hue": "green",
+        "hat_top_fill": 0.125,
+        "hat_front_fill": 0.46875,
+        "hat_right_fill": 0.1875,
+        "hat_left_fill": 0.171875,
+        "hat_back_fill": 0.375,
+        "jacket_fill": 0.375,
+        "sleeve_fill": 0.041666666666666664,
+        "pants_outer_fill": 0.0625,
+        "head_front_unique": 10,
+        "jacket_unique": 2,
+        "hat_front_unique": 6,
+        "face_framing": 1,
+        "hat_symmetry": 0.96875
+      }
+    }
+  ]
+}

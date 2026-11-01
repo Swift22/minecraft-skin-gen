@@ -31,3 +31,12 @@ TypeScript 5.x, Node.js 18.17.0+: Follow standard conventions
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->
+
+## Product copy — plain and visual
+
+Applies to any user-facing text produced in this project: UI labels, buttons, empty states, errors, toasts, tooltips, onboarding, notifications, emails.
+
+- Plain language: everyday words a non-technical user gets at a glance — write it the way a person would say it out loud. Jargon and technical terms stay in the code, out of the UI.
+- Shortest wording that still works. Ship the cut-down version, not the thorough one.
+- Show, don't tell: prefer a visual where the UI allows one — icon, progress bar, chart, illustration — text becomes the caption.
+- Errors: say what happened and what to do next in plain words. Raw exception/API text (`error.message`, stack traces, HTTP codes) goes to logs or a collapsed details view, never into visible copy.
